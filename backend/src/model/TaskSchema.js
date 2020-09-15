@@ -23,8 +23,7 @@ description:{
     required: true
 },
 priority:{
-    type: Number,
-    required: true
+    type: Number
 },
 remindbefore:{
     type: Date,
