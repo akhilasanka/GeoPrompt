@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ScrollView, Platform, StyleSheet, Text, View, Button} from 'react-native';
+import {Platform, StyleSheet, Text, View, Button} from 'react-native';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 
 export default class WelcomeView extends React.Component {
