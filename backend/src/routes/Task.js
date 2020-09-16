@@ -15,13 +15,29 @@ router.get('/tasks', function (req, res) {
         }
     });
 });
-router.post('/tasks', function (req, res) {
-    Tasks.tasks.create(req.body, function (err, message) {
-        if (err) {
-            res.status(500).json({ responseMessage: err.message });
-        } else {
-            res.status(200).json({ responseMessage: "Successfully created task" });
-        }
-    });
+router.post("/task", function (req, res) {
+    console.log("/task post request");
+    console.log(req.body);
+    if (req.body != null) {
+        const taskData = {
+            title: req.body.title,
+            description: req.body.description,
+            userid: req.body.userid,
+            status: "Pending",
+            categoryName: req.body.categoryName,
+            remindbefore: req.body.remindbefore,
+        };
+        console.log("Task Data:", taskData);
+        Tasks.tasks.create(taskData, function (err, message) {
+            if (err) {
+                res.status(500).json({ responseMessage: err.message });
+            } else {
+                console.log("Successfully created task");
+                res.status(200).json({ responseMessage: "Successfully created task" });
+            }
+        });
+    } else {
+        res.status(400).json({ responseMessage: "Invalid request" });
+    }
 });
 module.exports = router;
