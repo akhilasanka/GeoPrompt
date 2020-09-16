@@ -7,6 +7,10 @@ export default class WelcomeView extends React.Component {
     //alert('You tapped the button!');
     this.props.navigation.navigate('AddReminder');
   };
+  _onPressNotification = () => {
+      //alert('You tapped the button!');
+      this.props.navigation.navigate('NotificationLandingMap');
+    };
 
   render() {
     return (
@@ -33,6 +37,13 @@ export default class WelcomeView extends React.Component {
           <Button
             onPress={this._onPressButton}
             title="Add Reminder"
+            color="#841584"
+          />
+        </View>
+        <View style={styles.buttonContainer}>
+          <Button
+            onPress={this._onPressNotification}
+            title="Notification Demo Map"
             color="#841584"
           />
         </View>
