@@ -56,7 +56,7 @@ var options = {
   stylesheet: formStyles,
 };
 
-export default class WelcomeView extends React.Component {
+export default class AddReminderScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
