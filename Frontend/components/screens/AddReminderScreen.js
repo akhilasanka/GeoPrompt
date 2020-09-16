@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
-import t from 'tcomb-form-native';
+import React, { Component } from 'react';
+import { Platform, StyleSheet, Text, View, TouchableHighlight, Button } from 'react-native';
+var t = require('tcomb-form-native');
 
 const Form = t.form.Form;
 
@@ -19,12 +19,41 @@ const Reminder = t.struct({
   remindBefore: t.Date,
 });
 
+const formStyles = {
+  ...Form.stylesheet,
+  formGroup: {
+    normal: {
+      marginBottom: 10
+    },
+  },
+  controlLabel: {
+    normal: {
+      color: 'black',
+      fontSize: 18,
+      marginBottom: 7,
+      fontWeight: '600'
+    },
+    // the style applied when a validation error occours
+    error: {
+      color: 'black',
+      fontSize: 18,
+      marginBottom: 7,
+      fontWeight: '600'
+    }
+  }
+}
+
 var options = {
   fields: {
     remindBefore: {
       mode: 'date', // display the Date field as a DatePickerAndroid
+      error: 'Please provide a date'
     },
+    title: {
+      error: 'Please provide title'
+    }
   },
+  stylesheet: formStyles,
 };
 
 export default class AddReminderScreen extends React.Component {
@@ -37,15 +66,26 @@ export default class AddReminderScreen extends React.Component {
     };
   }
 
+  handleSubmit = () => {
+    console.log("Submit event");
+    var value = this._form.getValue();
+    if (value) { // if validation fails, value will be null
+      console.log(value); // value here is an instance of Person
+    }
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <Form
+          ref={c => this._form = c}
           type={Reminder}
           options={options}
           value={this.state.initialvalue}
         />
-        {/* Notice the addition of the Form component */}
+        <TouchableHighlight style={styles.button} onPress={this.handleSubmit} underlayColor='#99d9f4'>
+          <Text style={styles.buttonText}>Add Task</Text>
+        </TouchableHighlight>
       </View>
     );
   }
@@ -58,4 +98,21 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#ffffff',
   },
+  buttonText: {
+    fontSize: 18,
+    color: 'white',
+    alignSelf: 'center'
+  },
+  button: {
+    marginTop: 50,
+    height: 36,
+    backgroundColor: '#48BBEC',
+    borderColor: '#48BBEC',
+    borderWidth: 1,
+    borderRadius: 8,
+    marginBottom: 10,
+    alignSelf: 'stretch',
+    justifyContent: 'center'
+  }
 });
+
