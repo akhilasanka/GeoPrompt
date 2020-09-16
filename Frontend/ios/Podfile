@@ -10,6 +10,10 @@ target 'GeopromptFrontend' do
 
   pod 'react-native-maps', :path => '../node_modules/react-native-maps'
 
+  pod 'react-native-orientation', :path => '../node_modules/react-native-orientation'
+
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
   target 'GeopromptFrontendTests' do
     inherit! :complete
     # Pods for testing
