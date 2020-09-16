@@ -23,6 +23,10 @@ export default class HomeScreen extends Component {
     this.props.navigation.navigate('AddReminderScreen');
   };
 
+  _onPressListTasksButton = () => {
+      this.props.navigation.navigate('ListTaskScreen');
+    };
+
   render() {
     return (
       <View style={StyleSheet.absoluteFillObject}>
@@ -43,6 +47,13 @@ export default class HomeScreen extends Component {
           <Text style={styles.mapLabel}>
             GeoPrompt - A Location Based Task Reminder Service
           </Text>
+        </View>
+        <View style={styles.buttonContainer}>
+          <Button
+            onPress={this._onPressListTasksButton}
+            title="List Tasks"
+            color="#841584"
+          />
         </View>
         <View style={styles.buttonContainer}>
           <Button

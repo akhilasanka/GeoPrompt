@@ -4,6 +4,7 @@ import SampleScreen from '../screens/SampleScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import AddReminderScreen from '../screens/AddReminderScreen';
+import ListTaskScreen from '../screens/ListTaskScreen';
 import NotificationLandingMapScreen from '../screens/NotificationLandingMapScreen';
 import {Platform} from 'react-native';
 import {Icon} from 'react-native-elements';
@@ -20,6 +21,9 @@ const HomeStack = createStackNavigator(
     },
     AddReminderScreen: {
       screen: AddReminderScreen,
+    },
+    ListTaskScreen: {
+      screen: ListTaskScreen,
     },
   },
   {
