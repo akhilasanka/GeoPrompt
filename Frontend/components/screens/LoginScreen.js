@@ -32,7 +32,7 @@ export default class LoginScreen extends Component {
     const value = this._form.getValue();
     console.log('value: ', value);
     if (value) {
-      this.props.navigation.navigate('HomeScreen');
+      this.props.navigation.navigate('ListTaskScreen');
     }
   };
 

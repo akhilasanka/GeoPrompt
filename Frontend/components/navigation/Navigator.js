@@ -1,9 +1,8 @@
 import React from 'react';
-import HomeScreen from '../screens/HomeScreen';
-import SampleScreen from '../screens/SampleScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import AddReminderScreen from '../screens/AddReminderScreen';
+import ListTaskScreen from '../screens/ListTaskScreen';
 import NotificationLandingMapScreen from '../screens/NotificationLandingMapScreen';
 import {Platform} from 'react-native';
 import {Icon} from 'react-native-elements';
@@ -15,15 +14,15 @@ import BurgerMenu from '../menu/BurgerMenu';
 
 const HomeStack = createStackNavigator(
   {
-    HomeScreen: {
-      screen: HomeScreen,
-    },
     AddReminderScreen: {
       screen: AddReminderScreen,
     },
+    ListTaskScreen: {
+      screen: ListTaskScreen,
+    },
   },
   {
-    initialRouteName: 'HomeScreen',
+    initialRouteName: 'ListTaskScreen',
     defaultNavigationOptions: {
       ...TransitionPresets.SlideFromRightIOS,
     },
@@ -42,13 +41,13 @@ HomeStack.navigationOptions = ({navigation}) => {
   }
 
   return {
-    tabBarLabel: 'Home',
+    tabBarLabel: 'Tasks',
     tabBarIcon: ({tintColor}) => (
       <Icon name="ios-home" type="ionicon" color={tintColor} />
     ),
     tabBarVisible,
     drawerLockMode,
-    drawerLabel: 'Home',
+    drawerLabel: 'Tasks',
     drawerIcon: ({tintColor}) => (
       <Icon name="md-home" type="ionicon" color={tintColor} />
     ),
