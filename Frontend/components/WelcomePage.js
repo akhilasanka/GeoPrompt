@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Button} from 'react-native';
+import {ScrollView, Platform, StyleSheet, Text, View, Button} from 'react-native';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 
 export default class WelcomeView extends React.Component {
@@ -11,7 +11,10 @@ export default class WelcomeView extends React.Component {
       //alert('You tapped the button!');
       this.props.navigation.navigate('NotificationLandingMap');
     };
-
+  _onPressListTasks = () => {
+    //alert('You tapped the button!');
+    this.props.navigation.navigate('ListTasks');
+  };
   render() {
     return (
       <View style={StyleSheet.absoluteFillObject}>
@@ -32,6 +35,13 @@ export default class WelcomeView extends React.Component {
           <Text style={styles.mapLabel}>
             GeoPrompt - A Location Based Task Reminder Service
           </Text>
+        </View>
+        <View style={styles.buttonContainer}>
+                  <Button
+                    onPress={this._onPressListTasks}
+                    title="List Tasks"
+                    color="#841584"
+                  />
         </View>
         <View style={styles.buttonContainer}>
           <Button
