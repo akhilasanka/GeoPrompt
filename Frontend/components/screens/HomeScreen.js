@@ -1,16 +1,27 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Button} from 'react-native';
+import {Platform, StyleSheet, Text, View} from 'react-native';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import {Icon, Button} from 'react-native-elements';
 
-export default class WelcomeView extends React.Component {
+export default class HomeScreen extends Component {
+  static navigationOptions = ({navigation}) => ({
+    headerTitle: 'Home',
+    headerLeft: Platform.select({
+      ios: null,
+      android: (
+        <Icon
+          name="md-menu"
+          type="ionicon"
+          containerStyle={styles.icon}
+          onPress={() => navigation.toggleDrawer()}
+        />
+      ),
+    }),
+  });
+
   _onPressButton = () => {
-    //alert('You tapped the button!');
-    this.props.navigation.navigate('AddReminder');
+    this.props.navigation.navigate('AddReminderScreen');
   };
-  _onPressNotification = () => {
-      //alert('You tapped the button!');
-      this.props.navigation.navigate('NotificationLandingMap');
-    };
 
   render() {
     return (
@@ -40,18 +51,17 @@ export default class WelcomeView extends React.Component {
             color="#841584"
           />
         </View>
-        <View style={styles.buttonContainer}>
-          <Button
-            onPress={this._onPressNotification}
-            title="Notification Demo Map"
-            color="#841584"
-          />
-        </View>
       </View>
     );
   }
 }
+
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+  },
   map: {
     position: 'absolute',
     left: 30,
@@ -72,5 +82,8 @@ const styles = StyleSheet.create({
   buttonContainer: {
     top: 550,
     margin: 20,
+  },
+  icon: {
+    padding: 10,
   },
 });
