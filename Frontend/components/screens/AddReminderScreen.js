@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, TouchableHighlight, Button } from 'react-native';
+import { Platform, StyleSheet, Text, View, TouchableHighlight, Button, Alert } from 'react-native';
 var t = require('tcomb-form-native');
+import axios from 'axios';
 
 const Form = t.form.Form;
 
 var Category = t.enums(
   {
-    Groceries: 'Groceries',
+    Groceries: 'Grocery',
     GasStation: 'Gas Station',
   },
   'Category',
@@ -66,11 +67,50 @@ export default class AddReminderScreen extends React.Component {
     };
   }
 
-  handleSubmit = () => {
-    console.log("Submit event");
+  handleSubmit = async () => {
+    console.log("Submit event for add task");
     var value = this._form.getValue();
     if (value) { // if validation fails, value will be null
       console.log(value); // value here is an instance of Person
+      var note = "";
+      if (value.note != null) {
+        note = value.note;
+      }
+      await axios({
+        method: 'post',
+        url: 'http://localhost:3001/geoprompt/task',
+        data: {
+          "title": value.title,
+          "description": note,
+          "userid": "15",
+          "categoryName": value.category,
+          "remindbefore": value.remindBefore
+        },
+        config: { headers: { 'Content-Type': 'multipart/form-data' } }
+      })
+        .then(res => {
+          console.log(res);
+          if (res.status == 200) {
+            Alert.alert(
+              "Success!!!",
+              "Added Task Successfully",
+              [
+                { text: "OK", onPress: () => this.props.navigation.navigate('ListTaskScreen') }
+              ]
+            );
+          } else {
+            Alert.alert(
+              "Oops!!!",
+              "Couldn't add task. Please try again.",
+              [
+                { text: "OK", onPress: () => console.log(res.responseMessage) }
+              ]
+            );
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 
