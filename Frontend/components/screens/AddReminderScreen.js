@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, TouchableHighlight, Button, Alert } from 'react-native';
+import React from 'react';
+import {StyleSheet, Text, View, TouchableHighlight, Alert} from 'react-native';
 var t = require('tcomb-form-native');
 import axios from 'axios';
+import {backendBaseURL} from '../constants/Constants';
 
 const Form = t.form.Form;
 
@@ -24,7 +25,7 @@ const formStyles = {
   ...Form.stylesheet,
   formGroup: {
     normal: {
-      marginBottom: 10
+      marginBottom: 10,
     },
   },
   controlLabel: {
@@ -32,27 +33,27 @@ const formStyles = {
       color: 'black',
       fontSize: 18,
       marginBottom: 7,
-      fontWeight: '600'
+      fontWeight: '600',
     },
     // the style applied when a validation error occours
     error: {
       color: 'black',
       fontSize: 18,
       marginBottom: 7,
-      fontWeight: '600'
-    }
-  }
-}
+      fontWeight: '600',
+    },
+  },
+};
 
 var options = {
   fields: {
     remindBefore: {
       mode: 'date', // display the Date field as a DatePickerAndroid
-      error: 'Please provide a date'
+      error: 'Please provide a date',
     },
     title: {
-      error: 'Please provide title'
-    }
+      error: 'Please provide title',
+    },
   },
   stylesheet: formStyles,
 };
@@ -68,62 +69,61 @@ export default class AddReminderScreen extends React.Component {
   }
 
   handleSubmit = async () => {
-    console.log("Submit event for add task");
+    console.log('Submit event for add task');
     var value = this._form.getValue();
-    if (value) { // if validation fails, value will be null
+    if (value) {
+      // if validation fails, value will be null
       console.log(value); // value here is an instance of Person
-      var note = "";
+      var note = '';
       if (value.note != null) {
         note = value.note;
       }
       await axios({
         method: 'post',
-        url: 'http://localhost:3001/geoprompt/task',
+        url: backendBaseURL + '/geoprompt/task',
         data: {
-          "title": value.title,
-          "description": note,
-          "userid": "15",
-          "categoryName": value.category,
-          "remindbefore": value.remindBefore
+          title: value.title,
+          description: note,
+          userid: '15',
+          categoryName: value.category,
+          remindbefore: value.remindBefore,
         },
-        config: { headers: { 'Content-Type': 'multipart/form-data' } }
+        config: {headers: {'Content-Type': 'multipart/form-data'}},
       })
-        .then(res => {
+        .then((res) => {
           console.log(res);
           if (res.status == 200) {
-            Alert.alert(
-              "Success!!!",
-              "Added Task Successfully",
-              [
-                { text: "OK", onPress: () => this.props.navigation.navigate('ListTaskScreen') }
-              ]
-            );
+            Alert.alert('Success!!!', 'Added Task Successfully', [
+              {
+                text: 'OK',
+                onPress: () => this.props.navigation.navigate('ListTaskScreen'),
+              },
+            ]);
           } else {
-            Alert.alert(
-              "Oops!!!",
-              "Couldn't add task. Please try again.",
-              [
-                { text: "OK", onPress: () => console.log(res.responseMessage) }
-              ]
-            );
+            Alert.alert('Oops!!!', "Couldn't add task. Please try again.", [
+              {text: 'OK', onPress: () => console.log(res.responseMessage)},
+            ]);
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     }
-  }
+  };
 
   render() {
     return (
       <View style={styles.container}>
         <Form
-          ref={c => this._form = c}
+          ref={(c) => (this._form = c)}
           type={Reminder}
           options={options}
           value={this.state.initialvalue}
         />
-        <TouchableHighlight style={styles.button} onPress={this.handleSubmit} underlayColor='#99d9f4'>
+        <TouchableHighlight
+          style={styles.button}
+          onPress={this.handleSubmit}
+          underlayColor="#99d9f4">
           <Text style={styles.buttonText}>Add Task</Text>
         </TouchableHighlight>
       </View>
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 18,
     color: 'white',
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   button: {
     marginTop: 50,
@@ -152,7 +152,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 10,
     alignSelf: 'stretch',
-    justifyContent: 'center'
-  }
+    justifyContent: 'center',
+  },
 });
-
