@@ -6,6 +6,10 @@ const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const mongoose=require('mongoose')
+//Passport authentication
+var passport = require('passport');
+
+const requireUser = passport.authenticate('user', {session: false});
 
 mongoose.connect('mongodb+srv://user:user@geoprompt.w1li0.mongodb.net/geoprompt?retryWrites=true&w=majority',{ useNewUrlParser: true , poolSize: 10 }, function(err) {
   if (err) throw err;
@@ -53,12 +57,17 @@ app.get("/test", function (req, res) {
 	res.send("Hello World!");
 });
 
+app.use(passport.initialize());
+require('./src/config/passport')(passport);
+
 var basePath = '/geoprompt';
 var taskRoutes = require('./src/routes/Task');
 var locationRoutes = require('./src/routes/Location');
 var userRoutes = require('./src/routes/User');
-app.use(basePath, taskRoutes);
-app.use(basePath, locationRoutes);
+
 app.use(basePath, userRoutes);
+app.use(basePath, requireUser, taskRoutes);
+app.use(basePath, requireUser, locationRoutes);
+
 // console.log that your server is up and running
 app.listen(port, () => console.log(`Listening on port ${port}`));
