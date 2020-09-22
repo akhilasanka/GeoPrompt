@@ -12,9 +12,9 @@ Preliminary step: clone the repository
      This will start the backend server in http://localhost:3001.
      
 - To run frontend
-  1.Check if your machine has the following dependencies:
-    a. Node (node -v)
-    b. npm (npm -v)
+  1. Check if your machine has the following dependencies:
+      1. Node (node -v)
+      2. npm (npm -v)
   2. Install Android studio application and install atleast one simulator device within Android studio.
   3. Navigate to Frontend folder in terminal.
   4. Execute command 'npm install'
