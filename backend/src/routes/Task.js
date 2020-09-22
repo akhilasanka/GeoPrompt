@@ -2,7 +2,8 @@ var express = require('express');
 var router = express.Router();
 var Tasks = require('../model/TaskSchema');
 router.get('/tasks', function (req, res) {
-    Tasks.tasks.find({ "userid": req.query.userid, "status": "Pending"}, function (err, results) {
+    console.log("Inside list tasks API");
+    Tasks.tasks.find({ "email": req.query.email, "status": "Pending"}, function (err, results) {
         if (err){
             res.status(500).json({ responseMessage: err.message  });
         } else {
@@ -22,7 +23,7 @@ router.post("/task", function (req, res) {
         const taskData = {
             title: req.body.title,
             description: req.body.description,
-            userid: req.body.userid,
+            email: req.body.email,
             status: "Pending",
             categoryName: req.body.categoryName,
             remindbefore: req.body.remindbefore,

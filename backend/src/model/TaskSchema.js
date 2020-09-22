@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 const TaskSchema = new Schema({
-userid: {
+email: {
   type: String,
   required: true
 },
