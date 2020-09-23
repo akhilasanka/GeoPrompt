@@ -84,7 +84,7 @@ export default class AddReminderScreen extends React.Component {
         data: {
           title: value.title,
           description: note,
-          userid: '15',
+          email: 'a',
           categoryName: value.category,
           remindbefore: value.remindBefore,
         },
@@ -96,7 +96,7 @@ export default class AddReminderScreen extends React.Component {
             Alert.alert('Success!!!', 'Added Task Successfully', [
               {
                 text: 'OK',
-                onPress: () => this.props.navigation.navigate('ListTaskScreen'),
+                onPress: () => this.props.navigation.push('ListTaskScreen'),
               },
             ]);
           } else {

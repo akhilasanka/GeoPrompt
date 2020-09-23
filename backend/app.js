@@ -66,7 +66,7 @@ var locationRoutes = require('./src/routes/Location');
 var userRoutes = require('./src/routes/User');
 
 app.use(basePath, userRoutes);
-app.use(basePath, requireUser, taskRoutes);
+app.use(basePath, taskRoutes);
 app.use(basePath, requireUser, locationRoutes);
 
 // console.log that your server is up and running
