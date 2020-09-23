@@ -3,6 +3,7 @@ import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import AddReminderScreen from '../screens/AddReminderScreen';
 import ListTaskScreen from '../screens/ListTaskScreen';
+import TaskHistory from '../screens/TaskHistory';
 import NotificationLandingMapScreen from '../screens/NotificationLandingMapScreen';
 import {Platform} from 'react-native';
 import {Icon} from 'react-native-elements';
@@ -54,6 +55,19 @@ HomeStack.navigationOptions = ({navigation}) => {
   };
 };
 
+const TaskHistoryStack = createStackNavigator({
+  TaskHistory: {
+    screen: TaskHistory,
+  },
+});
+
+TaskHistoryStack.navigationOptions = {
+  drawerLabel: 'Task History',
+  drawerIcon: ({tintColor}) => (
+    <Icon name="history" />
+  ),
+};
+
 const NotificationStack = createStackNavigator({
   NotificationLandingMapScreen: {
     screen: NotificationLandingMapScreen,
@@ -67,10 +81,11 @@ NotificationStack.navigationOptions = {
   ),
 };
 
+
 const MainNavigator = Platform.select({
   android: createDrawerNavigator(
-    {HomeStack, NotificationStack},
-    {contentComponent: BurgerMenu},
+    {HomeStack, TaskHistoryStack, NotificationStack},
+    {contentComponent: BurgerMenu}
   ),
 });
 
