@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "849025990700",
+    "firebase_url": "https://geoprompt-notifications.firebaseio.com",
+    "project_id": "geoprompt-notifications",
+    "storage_bucket": "geoprompt-notifications.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:849025990700:android:6897267d93eaad5fa99189",
+        "android_client_info": {
+          "package_name": "com.geopromptfrontend"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "849025990700-lvti70grlfni2gs7bs83prd2o7804vrd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-Ps14FkUPaSDm5Wgqji4fJcNPtH9JWCw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "849025990700-lvti70grlfni2gs7bs83prd2o7804vrd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
