@@ -5,7 +5,7 @@ import {Icon} from 'react-native-elements';
 
 export default class NotificationLandingMapScreen extends React.Component {
   static navigationOptions = ({navigation}) => ({
-    headerTitle: 'Sample Screen',
+    headerTitle: 'Task locations nearby',
     headerLeft: Platform.select({
       ios: (
         <Icon
