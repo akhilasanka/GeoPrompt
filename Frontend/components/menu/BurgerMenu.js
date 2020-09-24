@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import React, {PureComponent} from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
 import {Button} from 'react-native-elements';
@@ -5,6 +6,37 @@ import {SafeAreaView, withNavigation} from 'react-navigation';
 import {DrawerItems} from 'react-navigation-drawer';
 
 class BurgerMenu extends PureComponent {
+  clearToken = async () => {
+    try {
+      await AsyncStorage.removeItem('jwt-token');
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  clearName = async () => {
+    try {
+      await AsyncStorage.removeItem('user-name');
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  clearEmail = async () => {
+    try {
+      await AsyncStorage.removeItem('user-email');
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  onLogout = async () => {
+    this.props.navigation.navigate('LoginScreen');
+  };
+
   render() {
     return (
       <SafeAreaView
@@ -19,7 +51,7 @@ class BurgerMenu extends PureComponent {
           iconContainerStyle={styles.icon}
           buttonStyle={styles.button}
           titleStyle={styles.title}
-          onPress={() => this.props.navigation.navigate('LoginScreen')}
+          onPress={this.onLogout}
         />
       </SafeAreaView>
     );
