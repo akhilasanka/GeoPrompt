@@ -34,6 +34,10 @@ class BurgerMenu extends PureComponent {
   };
 
   onLogout = async () => {
+    console.log(await this.clearToken());
+    console.log(await this.clearName());
+    console.log(await this.clearEmail());
+    console.log(await AsyncStorage.getItem('jwt-token'));
     this.props.navigation.navigate('LoginScreen');
   };
 
