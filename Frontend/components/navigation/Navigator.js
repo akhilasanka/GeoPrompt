@@ -5,6 +5,7 @@ import AddReminderScreen from '../screens/AddReminderScreen';
 import ListTaskScreen from '../screens/ListTaskScreen';
 import TaskHistory from '../screens/TaskHistory';
 import NotificationLandingMapScreen from '../screens/NotificationLandingMapScreen';
+import EditReminderScreen from '../screens/EditReminderScreen';
 import {Platform} from 'react-native';
 import {Icon} from 'react-native-elements';
 import {createSwitchNavigator, createAppContainer} from 'react-navigation';
@@ -20,6 +21,9 @@ const HomeStack = createStackNavigator(
     },
     ListTaskScreen: {
       screen: ListTaskScreen,
+    },
+    EditReminderScreen: {
+      screen: EditReminderScreen,
     },
   },
   {
