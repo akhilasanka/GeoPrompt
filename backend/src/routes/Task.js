@@ -57,7 +57,7 @@ router.get('/completedTasks', function (req, res) {
 });
 
 router.get('/uniqueCategories', function (req, res) {
-    Tasks.tasks.distinct("categoryName",{"email": req.query.email}, function (err, results) {
+    Tasks.tasks.distinct("categoryName",{"email": req.query.email,status:"Pending"}, function (err, results) {
         if (err){
             res.status(500).json({ responseMessage: err.message  });
         } else {
