@@ -55,6 +55,22 @@ router.get('/completedTasks', function (req, res) {
         }
     });
 });
+
+router.get('/uniqueCategories', function (req, res) {
+    Tasks.tasks.distinct("categoryName",{"email": req.query.email}, function (err, results) {
+        if (err){
+            res.status(500).json({ responseMessage: err.message  });
+        } else {
+            if (results.length != 0) {
+                res.status(200).json({ results: results });
+                }
+            else {
+                res.status(204).json({ responseMessage: "No results found" });
+            }
+        }
+    });
+});
+
 router.post("/taskComplete", function (req, res) {
     console.log("/task post request");
     console.log(req.body);
@@ -65,7 +81,7 @@ router.post("/taskComplete", function (req, res) {
                 res.status(500).json({ responseMessage: err.message });
             } else {
                 console.log("Task completed!");
-                res.status(200).json({ responseMessage: "Successfully created task" });
+                res.status(200).json({ responseMessage: "Successfully Set Task Status to Complete!" });
             }
         });
     } else {
