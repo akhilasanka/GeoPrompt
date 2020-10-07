@@ -1,6 +1,27 @@
 var express = require('express');
 var router = express.Router();
 var Tasks = require('../model/TaskSchema');
+const googleMapsClient = require('@google/maps').createClient({
+    key: 'AIzaSyDoCZjlJjKSxIbwuMLUv4Xg_dySO3Rfynw'
+  });
+
+  
+router.get('/maps', function (req, res) {
+
+    var items = ["Ruchulu","SKV Temple","Target"];
+    googleMapsClient.directions({
+        origin: "101 E San Fernando St Ste 100, San Jose, CA 95112",
+        destination: "1 Infinite Loop, Cupertino, CA 95014, USA",
+        waypoints: items,
+        optimize: true,
+        mode: "driving",     
+        }, function(err, response) {
+          if (!err) { 
+          res.status(200).json({ results: response });
+          };
+        });
+});
+
 router.get('/tasks', function (req, res) {
     console.log("Inside list tasks API");
     Tasks.tasks.find({ "email": req.query.email, "status": "Pending"}, function (err, results) {
