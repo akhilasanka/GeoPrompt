@@ -1,10 +1,14 @@
 import PushNotification from 'react-native-push-notification';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class NotificationHandler {
     constructor(onUserClick) {
         PushNotification.configure({
-              onRegister: function(token) {
-                console.log('TOKEN:', token)
+              onRegister: async function(token) {
+                await AsyncStorage.setItem('firebase-android-token', token.token);
+                AsyncStorage.getItem("firebase-android-token").then((token) => {
+                    console.log('Firebase token from asyncstorage:', token);
+                });
               },
               onNotification: function(notification) {
                 if(!notification.userInteraction) {
