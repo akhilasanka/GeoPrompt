@@ -2,6 +2,27 @@ var express = require('express');
 var router = express.Router();
 var Tasks = require('../model/TaskSchema');
 var ObjectId = require('mongodb').ObjectID;
+const googleMapsClient = require('@google/maps').createClient({
+    key: 'AIzaSyDoCZjlJjKSxIbwuMLUv4Xg_dySO3Rfynw'
+  });
+
+  
+router.get('/maps', function (req, res) {
+
+    var items = ["Ruchulu","SKV Temple","Target"];
+    googleMapsClient.directions({
+        origin: "101 E San Fernando St Ste 100, San Jose, CA 95112",
+        destination: "1 Infinite Loop, Cupertino, CA 95014, USA",
+        waypoints: items,
+        optimize: true,
+        mode: "driving",     
+        }, function(err, response) {
+          if (!err) { 
+          res.status(200).json({ results: response });
+          };
+        });
+});
+
 router.get('/tasks', function (req, res) {
     console.log("Inside list tasks API");
     Tasks.tasks.find({ "email": req.query.email, "status": "Pending" }, function (err, results) {
@@ -56,6 +77,22 @@ router.get('/completedTasks', function (req, res) {
         }
     });
 });
+
+router.get('/uniqueCategories', function (req, res) {
+    Tasks.tasks.distinct("categoryName",{"email": req.query.email,status:"Pending"}, function (err, results) {
+        if (err){
+            res.status(500).json({ responseMessage: err.message  });
+        } else {
+            if (results.length != 0) {
+                res.status(200).json({ results: results });
+                }
+            else {
+                res.status(204).json({ responseMessage: "No results found" });
+            }
+        }
+    });
+});
+
 router.post("/taskComplete", function (req, res) {
     console.log("/task post request");
     console.log(req.body);
@@ -66,7 +103,7 @@ router.post("/taskComplete", function (req, res) {
                 res.status(500).json({ responseMessage: err.message });
             } else {
                 console.log("Task completed!");
-                res.status(200).json({ responseMessage: "Successfully created task" });
+                res.status(200).json({ responseMessage: "Successfully Set Task Status to Complete!" });
             }
         });
     } else {
