@@ -3,6 +3,7 @@ import {ScrollView, StyleSheet} from 'react-native';
 import {Button} from 'react-native-elements';
 import {SafeAreaView, withNavigation} from 'react-navigation';
 import {DrawerItems} from 'react-navigation-drawer';
+import {onLogout} from './Logout';
 
 class BurgerMenu extends PureComponent {
   render() {
@@ -19,7 +20,10 @@ class BurgerMenu extends PureComponent {
           iconContainerStyle={styles.icon}
           buttonStyle={styles.button}
           titleStyle={styles.title}
-          onPress={() => this.props.navigation.navigate('LoginScreen')}
+          onPress={() => {
+            onLogout();
+            this.props.navigation.navigate('LoginScreen');
+          }}
         />
       </SafeAreaView>
     );

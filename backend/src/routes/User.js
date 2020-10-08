@@ -31,7 +31,7 @@ router.post("/signup", function (req, res) {
     } else {
       if (user) {
         console.log("User Already Exists!", user);
-        res.status(205).json({ responseMessage: "User Already Exists!" });
+        res.status(409).json({ success: false, responseMessage: "User Already Exists!" });
       } else {
         let hashedPassword = bcrypt.hashSync(password, 2);
         var newUser = new Users.users({
@@ -45,13 +45,13 @@ router.post("/signup", function (req, res) {
             console.log("User saved successfully.", doc);
             res
               .status(200)
-              .json({ responseMessage: "User saved successfully." });
+              .json({ success: true, responseMessage: "User saved successfully." });
           },
           (err) => {
             console.log("Unable to save user details.", err);
             res
               .status(500)
-              .json({ responseMessage: "Unable to save user details." });
+              .json({ success: false, responseMessage: "Unable to save user details." });
           }
         );
       }
@@ -89,7 +89,7 @@ router.post("/signin", function (req, res) {
               email: user.email,
             });
         } else {
-          res.status(500).json({ responseMessage: "Invalid Credentials" });
+          res.status(401).json({ responseMessage: "Invalid Credentials" });
         }
       }
     }

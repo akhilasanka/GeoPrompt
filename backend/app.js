@@ -64,9 +64,11 @@ var basePath = '/geoprompt';
 var taskRoutes = require('./src/routes/Task');
 var locationRoutes = require('./src/routes/Location');
 var userRoutes = require('./src/routes/User');
+var notificationRoutes = require('./src/routes/Notification');
 
 app.use(basePath, userRoutes);
 app.use(basePath, taskRoutes);
+app.use(basePath, notificationRoutes);
 app.use(basePath, requireUser, locationRoutes);
 
 // console.log that your server is up and running
