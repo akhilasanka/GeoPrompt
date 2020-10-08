@@ -14,6 +14,8 @@ target 'GeopromptFrontend' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  pod '@mauron85_react-native-background-geolocation', :path => '../node_modules/@mauron85/react-native-background-geolocation'
+
   target 'GeopromptFrontendTests' do
     inherit! :complete
     # Pods for testing
