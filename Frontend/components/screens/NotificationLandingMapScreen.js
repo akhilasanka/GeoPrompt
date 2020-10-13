@@ -1,7 +1,11 @@
 import React from 'react';
-import {StyleSheet, View, Platform} from 'react-native';
+import {StyleSheet, View, Platform, Text} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import {Icon} from 'react-native-elements';
+import GetLocation from 'react-native-get-location'
+import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
+import {backendBaseURL} from '../constants/Constants';
 
 export default class NotificationLandingMapScreen extends React.Component {
   static navigationOptions = ({navigation}) => ({
@@ -25,36 +29,78 @@ export default class NotificationLandingMapScreen extends React.Component {
       ),
     }),
   });
+
+  constructor(props) {
+    super(props);
+    this.state = {
+        curLat: null, // initial hardcoded values
+        curLon: null, // initial hardcoded values
+        taskLocations: [],
+        latDelta: 0.0145,
+        lonDelta: 0.0145
+    }
+    this.updateLocation.bind(this);
+  }
+
+  updateLocation(newLat, newLon) {
+
+      // call backend API with new Lat, lon and userid
+      AsyncStorage.getItem('user-email').then( (email) => {
+        axios.get(backendBaseURL + '/geoprompt/tasksnearby', {params:{email: email, lat: newLat, lon: newLon}})
+        .then((res) => {
+            console.log("BACKEND CALL TO TASKSNEARBY:", res.data.tasks);
+            var taskLocations = [];
+            res.data.tasks.forEach((location) => {
+                console.log(location)
+                const numTasks = location.tasks.length;
+                if(numTasks > 0) {
+                    const desc = "" + numTasks + " task can be completed here.";
+                    taskLocations.push({lat: location.lat, lon: location.lon, title:location.Name, description: desc});
+                }
+
+            })
+            this.setState({curLat: newLat, curLon:newLon, taskLocations: taskLocations});
+        })
+        .catch((err) => {
+                console.log(err);
+        });
+      })
+  }
+
+  componentDidMount() {
+    //todo change this to track current location & call with latest coordinates.
+    this.updateLocation(37.486654, -121.923832);
+  }
+
   render() {
+    var mapView = <Text>No location to show</Text>;
+    if(this.state.curLat !== null && this.state.curLon !== null) {
+        const markers = this.state.taskLocations.map(function(each){
+                        console.log(each);
+                        const coordinate = {latitude: each.lat, longitude: each.lon}
+                         return(<Marker
+                            coordinate={coordinate}
+                            title={each.title}
+                            description={each.description}
+                          />);
+                       });
+        mapView = <MapView
+                      style={styles.map}
+                      provider={PROVIDER_GOOGLE}
+                      showsUserLocation
+                      initialRegion={{
+                        latitude: this.state.curLat,
+                        longitude: this.state.curLon,
+                        latitudeDelta: this.state.latDelta,
+                        longitudeDelta: this.state.lonDelta,
+                      }}>
+                      {markers}
+                    </MapView>;
+    }
     return (
       <View style={StyleSheet.absoluteFillObject}>
         <View style={StyleSheet.absoluteFillObject}>
-          <MapView
-            style={styles.map}
-            provider={PROVIDER_GOOGLE}
-            showsUserLocation
-            initialRegion={{
-              latitude: 37.560799,
-              longitude: -121.979869,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}>
-            <Marker
-              coordinate={{latitude: 37.521799, longitude: -121.979869}}
-              title="Joe's House"
-              description="Pick up lamp"
-            />
-            <Marker
-              coordinate={{latitude: 37.552799, longitude: -121.999869}}
-              title="USPS"
-              description="Drop off check"
-            />
-            <Marker
-              coordinate={{latitude: 37.543799, longitude: -121.959869}}
-              title="Safeway"
-              description="Buy milk at safeway"
-            />
-          </MapView>
+          {mapView}
         </View>
       </View>
     );
