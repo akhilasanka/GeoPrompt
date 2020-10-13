@@ -30,46 +30,51 @@ router.get("/tasksnearby", function(req, res){
                     cat_task_map[cat_id].push(row);
                 }
             });
-            const categories_to_fetch = Object.keys(cat_task_map).join(",");
-            console.log("Foursquare categories to fetch: " + categories_to_fetch);
-            axios.get(foursquare_conf.venues_url, {
-                params:{
-                    client_id: foursquare_conf.client_id,
-                    client_secret: foursquare_conf.client_secret,
-                    v:foursquare_conf.version,
-                    ll:lat + "," + lon,
-                    intent: "browse",
-                    radius: foursquare_conf.radius,
-                    limit: foursquare_conf.num_results,
-                    categoryId: categories_to_fetch
-                }
-            })
-            .then(function (response) {
-                const venues = response.data["response"]["venues"];
-                var response_data = [];
-                venues.forEach(venue => {
-                    var tasks_at_venue = new Set();
-                    venue.categories.forEach(category => {
-                        const id = category.id;
-                        if(id in cat_task_map) {
-                            tasks_at_venue.add(cat_task_map[id]);
-                        }
+            if(Object.keys(cat_task_map).length === 0) {
+                res.status(200).json({ tasks: [] });
+            } else{
+                const categories_to_fetch = Object.keys(cat_task_map).join(",");
+                console.log("Foursquare categories to fetch: " + categories_to_fetch);
+                axios.get(foursquare_conf.venues_url, {
+                    params:{
+                        client_id: foursquare_conf.client_id,
+                        client_secret: foursquare_conf.client_secret,
+                        v:foursquare_conf.version,
+                        ll:lat + "," + lon,
+                        intent: "browse",
+                        radius: foursquare_conf.radius,
+                        limit: foursquare_conf.num_results,
+                        categoryId: categories_to_fetch
+                    }
+                })
+                .then(function (response) {
+                    const venues = response.data["response"]["venues"];
+                    var response_data = [];
+                    venues.forEach(venue => {
+                        var tasks_at_venue = new Set();
+                        venue.categories.forEach(category => {
+                            const id = category.id;
+                            if(id in cat_task_map) {
+                                cat_task_map[id].forEach(item => tasks_at_venue.add(item));
+                            }
+                        });
+                        const venue_data = {
+                            "Name": venue.name,
+                            "lat": venue.location.lat,
+                            "lon": venue.location.lng,
+                            "address": venue.location.formattedAddress[0],
+                            "tasks": Array.from(tasks_at_venue)
+                        };
+                        response_data.push(venue_data);
                     });
-                    const venue_data = {
-                        "Name": venue.name,
-                        "lat": venue.location.lat,
-                        "lon": venue.location.lng,
-                        "address": venue.location.formattedAddress[0],
-                        "tasks": Array.from(tasks_at_venue)
-                    };
-                    response_data.push(venue_data);
+                    res.status(200).json({ tasks: response_data });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    res.status(500).json({ responseMessage: error });
                 });
-                res.status(200).json({ tasks: response_data });
-            })
-            .catch(function (error) {
-                console.log(error);
-                res.status(500).json({ responseMessage: error });
-            });
+            }
+            
         }
     });
 });
