@@ -3,6 +3,8 @@ import Orientation from 'react-native-orientation';
 import {Alert, View} from 'react-native';
 import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
 import {onLogout} from '../menu/Logout';
+import {backendBaseURL} from '../constants/Constants';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class BackgroundGeolocationWrapper extends PureComponent {
   constructor(props) {
@@ -22,9 +24,11 @@ export default class BackgroundGeolocationWrapper extends PureComponent {
     );
   };
 
-  componentDidMount = () => {
+  componentDidMount = async () => {
     const {navigation} = this.props;
     Orientation.lockToPortrait();
+    const email = await AsyncStorage.getItem('user-email');
+    const deviceToken = await AsyncStorage.getItem('firebase-android-token');
 
     BackgroundGeolocation.configure({
       desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
@@ -34,10 +38,18 @@ export default class BackgroundGeolocationWrapper extends PureComponent {
       notificationText: 'enabled',
       startOnBoot: false,
       stopOnTerminate: true,
-      interval: 5000,
+      interval: 20000,
       fastestInterval: 5000,
       activitiesInterval: 1000,
       stopOnStillActivity: false,
+      url: backendBaseURL + '/geoprompt/reportlocation',
+      httpHeaders: {'Content-Type': 'application/json'},
+      postTemplate: {
+        lat: '@latitude',
+        lon: '@longitude',
+        email: email,
+        devicetoken: deviceToken,
+      },
     });
 
     BackgroundGeolocation.getCurrentLocation(
