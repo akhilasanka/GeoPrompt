@@ -29,6 +29,8 @@ export default class BackgroundGeolocationWrapper extends PureComponent {
     Orientation.lockToPortrait();
     const email = await AsyncStorage.getItem('user-email');
     const deviceToken = await AsyncStorage.getItem('firebase-android-token');
+    console.log('####################################');
+    console.log('Frontend: device token', deviceToken);
 
     BackgroundGeolocation.configure({
       desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
