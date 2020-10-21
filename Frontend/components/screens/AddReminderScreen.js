@@ -84,7 +84,7 @@ export default class AddReminderScreen extends React.Component {
         data: {
           title: value.title,
           description: note,
-          email: 'a',
+          email: 'vibhatest@test.com',
           categoryName: value.category,
           remindbefore: value.remindBefore,
         },

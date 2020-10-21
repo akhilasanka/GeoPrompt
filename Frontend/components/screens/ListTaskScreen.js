@@ -12,6 +12,7 @@ import axios from 'axios';
 import {backendBaseURL} from '../constants/Constants';
 import {Icon} from 'react-native-elements';
 import BackgroundGeolocationWrapper from './BackgroundGeolocationWrapper';
+import NotificationHandler from "../notification/NotificationHandler";
 
 export default class ListTaskScreen extends React.Component {
   constructor(props) {
@@ -21,7 +22,13 @@ export default class ListTaskScreen extends React.Component {
       colors: ['aliceblue', 'azure', 'beige'],
       tasks: [],
     };
+    this.handler = new NotificationHandler(this.onUserClick.bind(this));
   }
+  onUserClick(notification) {
+        //place holder function for custom behavior when user clicks on the notification.
+        const {navigate} = this.props.navigation;
+        navigate('NotificationLandingMapScreen');
+    }
   static navigationOptions = ({navigation}) => ({
     headerTitle: 'Home',
     headerLeft: () => (
@@ -42,7 +49,7 @@ export default class ListTaskScreen extends React.Component {
     ),
   });
   componentDidMount() {
-    var email = 'a';
+    var email = 'vibhatest@test.com';
     axios
       .get(backendBaseURL + '/geoprompt/tasks?email=' + email)
       .then((res) => {

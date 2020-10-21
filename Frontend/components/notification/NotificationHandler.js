@@ -24,7 +24,6 @@ export default class NotificationHandler {
                     });
                     console.log('GOT PUSH NOTIF ==>', notification)
                 } else {
-                    console.log("Opening app, the default behavior. Trying to navigate to ListTaskScreen")
                     onUserClick(notification);
                 }
               },
