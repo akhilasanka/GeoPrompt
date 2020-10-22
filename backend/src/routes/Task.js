@@ -5,22 +5,114 @@ var ObjectId = require('mongodb').ObjectID;
 const googleMapsClient = require('@google/maps').createClient({
     key: 'AIzaSyDoCZjlJjKSxIbwuMLUv4Xg_dySO3Rfynw'
   });
-
+var distance = require('google-distance-matrix');
+distance.key('AIzaSyDoCZjlJjKSxIbwuMLUv4Xg_dySO3Rfynw');
+distance.mode('driving');
+const { response } = require('express');
   
-router.get('/maps', function (req, res) {
+router.get('/recommendation',  function (req, res) {
 
-    var items = ["Ruchulu","SKV Temple","Target"];
-    googleMapsClient.directions({
-        origin: "101 E San Fernando St Ste 100, San Jose, CA 95112",
-        destination: "1 Infinite Loop, Cupertino, CA 95014, USA",
-        waypoints: items,
-        optimize: true,
-        mode: "driving",     
-        }, function(err, response) {
-          if (!err) { 
-          res.status(200).json({ results: response });
-          };
+        var origins = [req.query.origin];
+        var destinations = [req.query.destination];
+        var finalPlaces = [];
+        var finalPlacesNames = [];
+        try{
+        distance.matrix(origins, destinations, function (err, distances) {
+            if (err) {
+                return console.log(err);
+            }
+            if(!distances) {
+                return console.log('no distances');
+            }
+            if (distances.status == 'OK') {
+                for (var i=0; i < origins.length; i++) {
+                    for (var j = 0; j < destinations.length; j++) {
+                        if (distances.rows[0].elements[j].status == 'OK') {
+                            var distance = distances.rows[i].elements[j].distance.value;
+                            googleMapsClient.geocode({"address":origins[0]},function(err,response){
+                                if(!err){
+                                    var originLatLon = response.json.results[0].geometry.location
+                                    googleMapsClient.geocode({"address":destinations[0]}, function(err,response){
+                                        if(!err){
+                                            var destLatLon = response.json.results[0].geometry.location
+                                            var Categories = ["gas station","groceries","restaurants"];
+                                            for(var i=0;i < Categories.length;i++){
+                                                googleMapsClient.placesNearby({"location":originLatLon,"keyword":Categories[i],"radius":distance},function(err,responseMessage){
+                                                    if(!err){ 
+                                                        var Temp = []
+                                                        var names = []
+                                                        var results = responseMessage.json.results;
+                                                        for(var k=0;k<responseMessage.json.results.length;k++)
+                                                        {
+                                                            Temp.push(results[k].geometry.location)
+                                                            names.push(results[k].name)
+                                                        }              
+                                                        googleMapsClient.distanceMatrix({"origins":Temp,"destinations":destinations},function(err,response){
+                                                            if (!err) {
+                                                                var tempFinalArray = finalPlaces
+                                                                var namesOfPlaces = finalPlacesNames
+                                                                var ans = response.json.rows
+                                                                var minimum = 999999;
+                                                                var placeNeeded = ""
+                                                                var nameOfPlace = ""
+                                                                for(var l = 0; l<ans.length; l++)
+                                                                {
+                                                                    if(ans[l].elements[0].distance.value < minimum){
+                                                                        minimum = ans[l].elements[0].distance.value;
+                                                                        placeNeeded = response.json.origin_addresses[l];
+                                                                        nameOfPlace = names[l]
+                    
+                                                                    }
+                                                                }
+                                                                tempFinalArray.push(placeNeeded)
+                                                                namesOfPlaces.push(nameOfPlace)
+                                                                if(tempFinalArray.length == Categories.length){
+                                                                    googleMapsClient.directions({
+                                                                        origin: origins[0],
+                                                                        destination: destinations[0],
+                                                                        waypoints: tempFinalArray,
+                                                                        mode: "driving",     
+                                                                        }, function(err, response) {
+                                                                          if (!err) { 
+                                                                            var url = response.requestUrl
+                                                                            url = url.replace("https://maps.googleapis.com/maps/api/directions/json?","https://www.google.com/maps/dir/?api=1&")
+                                                                          return res.status(200).json({ results: url, placesVisiting: namesOfPlaces});
+                                                                          }
+                                                                          else{
+                                                                            return res.status(204).json({ responseMessage: "Error Getting route with way points" });
+                                                                          };
+                                                                        });
+                                                                }
+                                                            }
+                                                         
+                                                        })
+                                                    }
+                                                    else{
+                                                        return res.status(204).json({ responseMessage: "Error Getting PlacesNearby" });
+                                                    }
+                                                })                                           
+                                            }
+                                        }
+                                        else{
+                                            return res.status(204).json({ responseMessage: "Destination cannot be geocoded" });
+                                        }
+                                    })
+                                }
+                                else{
+                                    return res.status(204).json({ responseMessage: "Origin cannot be geocoded" });
+                                }
+                            });
+                        } else {
+                            return res.status(204).json({ responseMessage: destinations[0] + ' is not reachable by land from ' + origins[0]});
+                        }
+                    }
+                }
+            }
         });
+    }catch (error) {
+        console.log(error);
+      }
+
 });
 
 router.get('/tasks', function (req, res) {
