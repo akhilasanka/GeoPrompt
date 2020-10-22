@@ -36,8 +36,9 @@ export default class NotificationLandingMapScreen extends React.Component {
       curLat: null, // initial hardcoded values
       curLon: null, // initial hardcoded values
       taskLocations: [],
-      latDelta: 0.0145,
-      lonDelta: 0.0145,
+      latDelta: 0.029,
+      lonDelta: 0.029,
+      locationCounter: 0,
     };
     this.updateLocation.bind(this);
   }
@@ -65,11 +66,14 @@ export default class NotificationLandingMapScreen extends React.Component {
               });
             }
           });
-          this.setState({
-            curLat: newLat,
-            curLon: newLon,
-            taskLocations: taskLocations,
-          });
+          this.setState(
+            {
+              curLat: newLat,
+              curLon: newLon,
+              taskLocations: taskLocations,
+            },
+            this.goToInitialLocation,
+          );
         })
         .catch((err) => {
           console.log(err);
@@ -77,21 +81,62 @@ export default class NotificationLandingMapScreen extends React.Component {
     });
   }
 
+  roundNum = (num) => {
+    return Math.round(num * 100000) / 100000;
+  };
+
   componentDidMount() {
-    //todo change this to track current location & call with latest coordinates.
+    this.updateGPSLocation();
+    setInterval(this.updateGPSLocation, 3000);
+    setInterval(() => this.setState({locationCounter: 0}), 60000);
+  }
+
+  updateGPSLocation = () => {
     BackgroundGeolocation.getCurrentLocation(
       (location) => {
-        console.log('Inside Notification map screen', location);
-        this.updateLocation(location.latitude, location.longitude);
+        if (
+          this.state.locationCounter >= 20 ||
+          (this.state.curLat &&
+            this.state.curLon &&
+            this.roundNum(location.latitude) ===
+              this.roundNum(this.state.curLat) &&
+            this.roundNum(location.longitude) ===
+              this.roundNum(this.state.curLon))
+        ) {
+          return;
+        } else {
+          console.log(
+            '================= updating location counter: ' +
+              this.state.locationCounter +
+              ' =================',
+          );
+          this.setState((prevState, props) => ({
+            locationCounter: prevState.locationCounter + 1,
+          }));
+          this.updateLocation(location.latitude, location.longitude);
+        }
       },
       (error) => {
         console.log('Location services are not available');
       },
     );
-  }
+  };
+
+  goToInitialLocation = () => {
+    let initialRegion = Object.assign(
+      {},
+      {
+        latitude: this.state.curLat,
+        longitude: this.state.curLon,
+        latitudeDelta: this.state.latDelta,
+        longitudeDelta: this.state.lonDelta,
+      },
+    );
+    this.mapView.animateToRegion(initialRegion, 1000);
+  };
 
   render() {
-    var mapView = <Text>No location to show</Text>;
+    var mapView = <Text>...</Text>;
     var i = 0;
     if (this.state.curLat !== null && this.state.curLon !== null) {
       const markers = this.state.taskLocations.map(function (each) {
@@ -107,11 +152,18 @@ export default class NotificationLandingMapScreen extends React.Component {
           />
         );
       });
+      console.log('================= rerendering map =================');
       mapView = (
         <MapView
           style={styles.map}
           provider={PROVIDER_GOOGLE}
-          showsUserLocation
+          followUserLocation={true}
+          zoomEnabled={true}
+          zoomControlEnabled={true}
+          showsUserLocation={true}
+          showsMyLocationButton={true}
+          onMapReady={this.goToInitialLocation}
+          ref={(ref) => (this.mapView = ref)}
           initialRegion={{
             latitude: this.state.curLat,
             longitude: this.state.curLon,
@@ -131,11 +183,8 @@ export default class NotificationLandingMapScreen extends React.Component {
 }
 const styles = StyleSheet.create({
   map: {
-    position: 'absolute',
-    left: 30,
-    right: 30,
-    top: 30,
-    bottom: 200,
+    flex: 1,
+    marginLeft: 1,
   },
   mapLabelContainer: {
     position: 'absolute',
