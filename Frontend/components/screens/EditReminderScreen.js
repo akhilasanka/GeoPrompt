@@ -148,6 +148,36 @@ export default class EditTaskScreen extends React.Component {
         }
     };
 
+    handleDelete = async () => {
+        console.log('Submit event for delete task');
+            await axios({
+                method: 'post',
+                url: backendBaseURL + '/geoprompt/task/delete',
+                data: {
+                    taskid: this.state.taskid
+                },
+                config: { headers: { 'Content-Type': 'multipart/form-data' } },
+            })
+                .then((res) => {
+                    console.log(res);
+                    if (res.status == 200) {
+                        Alert.alert('Success!!!', 'Successfully deleted!', [
+                            {
+                                text: 'OK',
+                                onPress: () => this.props.navigation.push('ListTaskScreen'),
+                            },
+                        ]);
+                    } else {
+                        Alert.alert('Oops!!!', "Couldn't delete task. Please try again.", [
+                            { text: 'OK', onPress: () => console.log(res.responseMessage) },
+                        ]);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+    };
+
     render() {
 
         return (
@@ -160,6 +190,9 @@ export default class EditTaskScreen extends React.Component {
                 />
                 <TouchableHighlight style={styles.button} onPress={this.handleSubmit} underlayColor='#99d9f4'>
                     <Text style={styles.buttonText}>Update Task</Text>
+                </TouchableHighlight>
+                <TouchableHighlight style={styles.deletebutton} onPress={this.handleDelete} underlayColor='#99d9f4'>
+                    <Text style={styles.buttonText}>Delete Task</Text>
                 </TouchableHighlight>
             </View>
         );
@@ -183,6 +216,17 @@ const styles = StyleSheet.create({
         height: 36,
         backgroundColor: '#48BBEC',
         borderColor: '#48BBEC',
+        borderWidth: 1,
+        borderRadius: 8,
+        marginBottom: 10,
+        alignSelf: 'stretch',
+        justifyContent: 'center',
+    },
+    deletebutton: {
+        marginTop: 50,
+        height: 36,
+        backgroundColor: '#cb504d',
+        borderColor: '#cb504d',
         borderWidth: 1,
         borderRadius: 8,
         marginBottom: 10,

@@ -152,4 +152,20 @@ router.put("/task", function (req, res) {
         res.status(400).json({ responseMessage: "Invalid request" });
     }
 });
+
+router.post("/task/delete", function (req, res) {
+    console.log("/task/delete post request");
+    console.log(req.body);
+    if (req.body != null) {
+        const taskid = req.body.taskid;
+        Tasks.tasks.findOneAndDelete({ "_id": ObjectId(taskid.replace(/['"]+/g, '')) }, function (err, message) {
+            if (err) {
+                res.status(500).json({ responseMessage: err.message });
+            } else {
+                console.log("Successfully deleted task");
+                res.status(200).json({ responseMessage: "Successfully deleted" });
+            }
+        });
+    }
+});
 module.exports = router;
