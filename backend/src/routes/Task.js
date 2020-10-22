@@ -57,8 +57,8 @@ router.get('/recommendation',  function (req, res) {
                                                                 var nameOfPlace = ""
                                                                 for(var l = 0; l<ans.length; l++)
                                                                 {
-                                                                    if(ans[l].elements[0].distance.value < minimum){
-                                                                        minimum = ans[l].elements[0].distance.value;
+                                                                    if(ans[l].elements[0].duration.value < minimum){
+                                                                        minimum = ans[l].elements[0].duration.value;
                                                                         placeNeeded = response.json.origin_addresses[l];
                                                                         nameOfPlace = names[l]
                     
