@@ -80,10 +80,15 @@ router.get("/tasksnearby", function(req, res){
 });
 
 router.post('/reportlocation', function (req, res) {
-    const email = req.body.email;
-    const lat = req.body.lat;
-    const lon = req.body.lon;
-    const devicetoken = req.body.devicetoken;
+    const email = req.body[0].email;
+    const lat = req.body[0].lat;
+    const lon = req.body[0].lon;
+    const devicetoken = req.body[0].devicetoken;
+    console.log('Inside the Report Location API');
+    console.log('Latitude', lat);
+    console.log('Longitude', lon);
+    console.log('Email', email);
+    console.log('Device token', devicetoken);
     // Use tasks MongoDB & Places API to determine if notification should be sent
     Tasks.tasks.find({ "email": email, "status": "Pending"}, "categoryName", function (err, results) {
         if (err){

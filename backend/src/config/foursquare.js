@@ -1,5 +1,5 @@
 module.exports = {
-    radius: 800,
+    radius: 2000,
     client_id: "4AP3HYQT3MX0CEKZENGW231Z2RSUJWYOMLBNMWACHD5AYNC3",
     client_secret: "TQPLFFWDW0NAXG202DYNKXURCUNXHIFENTLHCPQPUCGMC1JC",
     version: "20200812",
