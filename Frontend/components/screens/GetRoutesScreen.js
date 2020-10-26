@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableHighlight, Alert } from 'react-native';
+import { StyleSheet, Text, View, TouchableHighlight, Alert,Linking } from 'react-native';
 import axios from 'axios';
+import {backendBaseURL} from '../constants/Constants';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import OriginComponent from './OriginComponent';
 import { Icon } from 'react-native-elements';
@@ -8,6 +9,13 @@ import { Icon } from 'react-native-elements';
 const GOOGLE_PLACES_API_KEY = 'AIzaSyDoCZjlJjKSxIbwuMLUv4Xg_dySO3Rfynw';
 
 export default class GetRouteScreen extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      url: ""
+    };
+    }
     static navigationOptions = ({ navigation }) => ({
         headerTitle: 'Complete tasks on your way',
         headerLeft: Platform.select({
@@ -29,10 +37,27 @@ export default class GetRouteScreen extends React.Component {
             ),
         }),
     });
-    handleSubmit = async () => {
+    handleSubmit = async (origin,destination) => {
         console.log('Get Optimized routes');
+            axios
+              .get(backendBaseURL + '/geoprompt/recommendation?origin='+origin+'&destination='+destination)
+              .then((res) => {
+                this.setState({url: res.data.results});
+                console.log(this.state.url)
+              })
+              .catch((err) => {
+                console.log(err);
+              });
     }
     render() {
+    var optimized = null;
+    if(this.state.url){
+      optimized = <Text style={{textAlign: 'center', // <-- the magic
+                                    fontWeight: 'bold',
+                                    color: 'blue',
+                                    fontSize: 18,
+                                    marginTop: 8,}} onPress={() => Linking.openURL(this.state.url)}>Generated Optimized Route</Text>;
+    }
         return (
             <View style={styles.container}>
                 <OriginComponent />
@@ -54,10 +79,11 @@ export default class GetRouteScreen extends React.Component {
                 />
                 <TouchableHighlight
                     style={styles.button}
-                    onPress={this.handleSubmit}
+                    onPress={()=>this.handleSubmit("101 E San Fernando","SAP Center")}
                     underlayColor="#99d9f4">
                     <Text style={styles.buttonText}>Get Routes</Text>
                 </TouchableHighlight>
+                {optimized}
             </View>
         );
     }
