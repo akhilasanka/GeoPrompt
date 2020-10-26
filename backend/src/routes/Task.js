@@ -34,64 +34,74 @@ router.get('/recommendation',  function (req, res) {
                                     var originLatLon = response.json.results[0].geometry.location
                                     googleMapsClient.geocode({"address":destinations[0]}, function(err,response){
                                         if(!err){
-                                            var destLatLon = response.json.results[0].geometry.location
-                                            var Categories = ["gas station","groceries","restaurants"];
-                                            for(var i=0;i < Categories.length;i++){
-                                                googleMapsClient.placesNearby({"location":originLatLon,"keyword":Categories[i],"radius":distance},function(err,responseMessage){
-                                                    if(!err){ 
-                                                        var Temp = []
-                                                        var names = []
-                                                        var results = responseMessage.json.results;
-                                                        for(var k=0;k<responseMessage.json.results.length;k++)
-                                                        {
-                                                            Temp.push(results[k].geometry.location)
-                                                            names.push(results[k].name)
-                                                        }              
-                                                        googleMapsClient.distanceMatrix({"origins":Temp,"destinations":destinations},function(err,response){
-                                                            if (!err) {
-                                                                var tempFinalArray = finalPlaces
-                                                                var namesOfPlaces = finalPlacesNames
-                                                                var ans = response.json.rows
-                                                                var minimum = 999999;
-                                                                var placeNeeded = ""
-                                                                var nameOfPlace = ""
-                                                                for(var l = 0; l<ans.length; l++)
-                                                                {
-                                                                    if(ans[l].elements[0].duration.value < minimum){
-                                                                        minimum = ans[l].elements[0].duration.value;
-                                                                        placeNeeded = response.json.origin_addresses[l];
-                                                                        nameOfPlace = names[l]
-                    
-                                                                    }
+                                            Tasks.tasks.distinct("categoryName",{"email": req.query.email,status:"Pending"}, function (err, results) {
+                                                if (err){
+                                                    res.status(500).json({ responseMessage: err.message  });
+                                                } else {
+                                                    if (results.length != 0) {
+                                                        var Categories = results;
+                                                        for(var i=0;i < Categories.length;i++){
+                                                            googleMapsClient.placesNearby({"location":originLatLon,"keyword":Categories[i],"radius":distance},function(err,responseMessage){
+                                                                if(!err){ 
+                                                                    var Temp = []
+                                                                    var names = []
+                                                                    var results = responseMessage.json.results;
+                                                                    for(var k=0;k<responseMessage.json.results.length;k++)
+                                                                    {
+                                                                        Temp.push(results[k].geometry.location)
+                                                                        names.push(results[k].name)
+                                                                    }              
+                                                                    googleMapsClient.distanceMatrix({"origins":Temp,"destinations":destinations},function(err,response){
+                                                                        if (!err) {
+                                                                            var tempFinalArray = finalPlaces
+                                                                            var namesOfPlaces = finalPlacesNames
+                                                                            var ans = response.json.rows
+                                                                            var minimum = 999999;
+                                                                            var placeNeeded = ""
+                                                                            var nameOfPlace = ""
+                                                                            for(var l = 0; l<ans.length; l++)
+                                                                            {
+                                                                                if(ans[l].elements[0].duration.value < minimum){
+                                                                                    minimum = ans[l].elements[0].duration.value;
+                                                                                    placeNeeded = response.json.origin_addresses[l];
+                                                                                    nameOfPlace = names[l]
+                                
+                                                                                }
+                                                                            }
+                                                                            tempFinalArray.push(placeNeeded)
+                                                                            namesOfPlaces.push(nameOfPlace)
+                                                                            if(tempFinalArray.length == Categories.length){
+                                                                                googleMapsClient.directions({
+                                                                                    origin: origins[0],
+                                                                                    destination: destinations[0],
+                                                                                    waypoints: tempFinalArray,
+                                                                                    mode: "driving",     
+                                                                                    }, function(err, response) {
+                                                                                      if (!err) { 
+                                                                                        var url = response.requestUrl
+                                                                                        url = url.replace("https://maps.googleapis.com/maps/api/directions/json?","https://www.google.com/maps/dir/?api=1&")
+                                                                                      return res.status(200).json({ results: url, placesVisiting: namesOfPlaces});
+                                                                                      }
+                                                                                      else{
+                                                                                        return res.status(204).json({ responseMessage: "Error Getting route with way points" });
+                                                                                      };
+                                                                                    });
+                                                                            }
+                                                                        }
+                                                                     
+                                                                    })
                                                                 }
-                                                                tempFinalArray.push(placeNeeded)
-                                                                namesOfPlaces.push(nameOfPlace)
-                                                                if(tempFinalArray.length == Categories.length){
-                                                                    googleMapsClient.directions({
-                                                                        origin: origins[0],
-                                                                        destination: destinations[0],
-                                                                        waypoints: tempFinalArray,
-                                                                        mode: "driving",     
-                                                                        }, function(err, response) {
-                                                                          if (!err) { 
-                                                                            var url = response.requestUrl
-                                                                            url = url.replace("https://maps.googleapis.com/maps/api/directions/json?","https://www.google.com/maps/dir/?api=1&")
-                                                                          return res.status(200).json({ results: url, placesVisiting: namesOfPlaces});
-                                                                          }
-                                                                          else{
-                                                                            return res.status(204).json({ responseMessage: "Error Getting route with way points" });
-                                                                          };
-                                                                        });
+                                                                else{
+                                                                    return res.status(204).json({ responseMessage: "Error Getting PlacesNearby" });
                                                                 }
-                                                            }
-                                                         
-                                                        })
+                                                            })                                           
+                                                        }
+                                                        }
+                                                    else {
+                                                        res.status(204).json({ responseMessage: "No Pending Tasks Categories found!" });
                                                     }
-                                                    else{
-                                                        return res.status(204).json({ responseMessage: "Error Getting PlacesNearby" });
-                                                    }
-                                                })                                           
-                                            }
+                                                }
+                                            });
                                         }
                                         else{
                                             return res.status(204).json({ responseMessage: "Destination cannot be geocoded" });

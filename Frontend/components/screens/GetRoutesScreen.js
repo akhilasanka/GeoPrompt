@@ -40,7 +40,7 @@ export default class GetRouteScreen extends React.Component {
     handleSubmit = async (origin,destination) => {
         console.log('Get Optimized routes');
             axios
-              .get(backendBaseURL + '/geoprompt/recommendation?origin='+origin+'&destination='+destination)
+              .get(backendBaseURL + '/geoprompt/recommendation?origin='+origin+'&destination='+destination+'&email='+"vibhatest@test.com")
               .then((res) => {
                 this.setState({url: res.data.results});
                 console.log(this.state.url)
