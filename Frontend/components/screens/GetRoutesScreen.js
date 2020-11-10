@@ -43,8 +43,11 @@ export default class GetRouteScreen extends React.Component {
             ),
         }),
     });
-    handleSubmit = async (origin, destination) => {
+    handleSubmit = async () => {
         console.log('Get Optimized routes');
+        if(!this.state.origin || !this.state.destination){
+                 Alert.alert("Enter both Origin & Destination");
+        }
         var email = null;
         AsyncStorage.getItem('user-email').then((token) => {
             if (token) {
