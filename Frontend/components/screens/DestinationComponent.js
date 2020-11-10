@@ -10,31 +10,31 @@ export default class OriginComponent extends React.Component {
         super(props);
 
         this.state = {
-          origin:"",
+          destination:"",
         };
         this.demoMethod = this.demoMethod.bind(this);
-      }
+        }
     demoMethod(){
-       this.props.sendOriginData(this.state.origin);
+       this.props.sendDestinationData(this.state.destination);
      }
     render() {
         return (
         <ScrollView keyboardShouldPersistTaps="handled">
             <View style={styles.container} keyboardShouldPersistTaps="handled">
-                <Text style={styles.normal}>Origin </Text>
+                <Text style={styles.normal}>Destination </Text>
                 <GooglePlacesAutocomplete
-                    placeholder='Search1'
+                    placeholder='Search2'
                     minLength={2} // minimum length of text to search
                     autoFocus={true}
-                    returnKeyType={'searchorigin'} // Can be left out for default return key
+                    returnKeyType={'searchdestination'} // Can be left out for default return key
                     listViewDisplayed={true}    // true/false/undefined
                     fetchDetails={true}
                     onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-                        this.setState({origin:data.description})
+                        this.setState({destination:data.description})
                         this.demoMethod()
                     }}
                     query={{
-                        key: 'AIzaSyDoCZjlJjKSxIbwuMLUv4Xg_dySO3Rfynw',
+                        key: 'AIzaSyAs-kf4i7-9PbNjJeYXzp3mP47geePMZqI',
                         language: 'en'
                     }}
                     nearbyPlacesAPI='GooglePlacesSearch'
