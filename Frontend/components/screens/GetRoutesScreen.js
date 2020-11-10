@@ -114,16 +114,10 @@ export default class GetRouteScreen extends React.Component {
         });
     }
     getOriginData(val){
-        // do not forget to bind getData in constructor
-        console.log("In origin data")
         this.setState({origin:val})
-        console.log(val);
     }
     getDestinationData(val){
-        // do not forget to bind getData in constructor
-                console.log("In destination data")
-                this.setState({destination:val})
-        console.log(val);
+        this.setState({destination:val})
     }
     render() {
     var optimized = null;

@@ -23,7 +23,7 @@ export default class OriginComponent extends React.Component {
             <View style={styles.container} keyboardShouldPersistTaps="handled">
                 <Text style={styles.normal}>Destination </Text>
                 <GooglePlacesAutocomplete
-                    placeholder='Search2'
+                    placeholder='Search Destination'
                     minLength={2} // minimum length of text to search
                     autoFocus={true}
                     returnKeyType={'searchdestination'} // Can be left out for default return key
