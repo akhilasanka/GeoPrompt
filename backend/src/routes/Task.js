@@ -83,7 +83,7 @@ router.get('/recommendation',  function (req, res) {
                                                                                       return res.status(200).json({ results: url, placesVisiting: namesOfPlaces});
                                                                                       }
                                                                                       else{
-                                                                                        return res.status(204).json({ responseMessage: "Error Getting route with way points" });
+                                                                                        return res.status(201).json({ responseMessage: "Error Getting route with way points" });
                                                                                       };
                                                                                     });
                                                                             }
@@ -92,13 +92,15 @@ router.get('/recommendation',  function (req, res) {
                                                                     })
                                                                 }
                                                                 else{
-                                                                    return res.status(204).json({ responseMessage: "Error Getting PlacesNearby" });
+                                                                    return res.status(202).json({ responseMessage: "Error Getting PlacesNearby" });
                                                                 }
                                                             })                                           
                                                         }
                                                         }
                                                     else {
-                                                        res.status(204).json({ responseMessage: "No Pending Tasks Categories found!" });
+                                                        console.log("No pending tasks")
+                                                    
+                                                        return res.status(203).json({responseMessage:'No Pending Tasks.'});
                                                     }
                                                 }
                                             });
@@ -109,11 +111,11 @@ router.get('/recommendation',  function (req, res) {
                                     })
                                 }
                                 else{
-                                    return res.status(204).json({ responseMessage: "Origin cannot be geocoded" });
+                                    return res.status(205).json({ responseMessage: "Origin cannot be geocoded" });
                                 }
                             });
                         } else {
-                            return res.status(204).json({ responseMessage: destinations[0] + ' is not reachable by land from ' + origins[0]});
+                            return res.status(206).json({ responseMessage: destinations[0] + ' is not reachable by land from ' + origins[0]});
                         }
                     }
                 }
