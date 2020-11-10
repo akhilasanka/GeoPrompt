@@ -96,7 +96,15 @@ export default class ListTaskScreen extends React.Component {
                   flex: 2,
                   backgroundColor: this.state.colors[index % 3],
                 }}>
-                <Text style={styles.title}>{item.title}</Text>
+                  <View style={{flexDirection: 'row'}}>
+                    <View style={{flex: 0.9}}>
+                      <Text style={{textAlign: 'center', fontWeight: 'bold',fontSize: 18,marginTop: 0,}}>{item.title}</Text>
+                    </View>
+                    <View style={{flex: 0.1}}>
+                      <Icon name="edit" type="material-icons" style={{ textAlign: 'right', padding:15}} onPress={() => this.onPressEditButton(item)}/>
+                    </View>
+                  </View>
+
                 <Text style={styles.description}>{item.description}</Text>
                 <Text style={styles.text}>Status: {item.status}</Text>
                 <Text style={styles.text}>Category: {item.categoryName}</Text>
@@ -108,12 +116,6 @@ export default class ListTaskScreen extends React.Component {
                   />
                   <Text>Mark as complete!</Text>
                 </View>
-                <Button
-                  style={styles.editButton}
-                  title="Edit Task"
-                  color="lightslategrey"
-                  onPress={() => this.onPressEditButton(item)}
-                />
               </TouchableOpacity>
             ))}
           </ScrollView>
@@ -175,5 +177,5 @@ const styles = StyleSheet.create({
   iconPlus: {
     padding: 15,
     alignItems: 'flex-end',
-  },
+  }
 });
