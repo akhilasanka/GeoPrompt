@@ -1,20 +1,21 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableHighlight, Alert,Linking } from 'react-native';
+import { StyleSheet, Text, View, TouchableHighlight, Alert, Linking } from 'react-native';
 import axios from 'axios';
-import {backendBaseURL} from '../constants/Constants';
+import { backendBaseURL } from '../constants/Constants';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import OriginComponent from './OriginComponent';
 import { Icon } from 'react-native-elements';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const GOOGLE_PLACES_API_KEY = 'AIzaSyDoCZjlJjKSxIbwuMLUv4Xg_dySO3Rfynw';
 
 export default class GetRouteScreen extends React.Component {
-  constructor(props) {
-    super(props);
+    constructor(props) {
+        super(props);
 
-    this.state = {
-      url: ""
-    };
+        this.state = {
+            url: ""
+        };
     }
     static navigationOptions = ({ navigation }) => ({
         headerTitle: 'Complete tasks on your way',
@@ -37,27 +38,36 @@ export default class GetRouteScreen extends React.Component {
             ),
         }),
     });
-    handleSubmit = async (origin,destination) => {
+    handleSubmit = async (origin, destination) => {
         console.log('Get Optimized routes');
-            axios
-              .get(backendBaseURL + '/geoprompt/recommendation?origin='+origin+'&destination='+destination+'&email='+"vibhatest@test.com")
-              .then((res) => {
-                this.setState({url: res.data.results});
-                console.log(this.state.url)
-              })
-              .catch((err) => {
-                console.log(err);
-              });
+        var email = null;
+        AsyncStorage.getItem('user-email').then((token) => {
+            if (token) {
+                console.log('email', token);
+                email = token;
+                axios
+                    .get(backendBaseURL + '/geoprompt/recommendation?origin=' + origin + '&destination=' + destination + '&email=' + email)
+                    .then((res) => {
+                        this.setState({ url: res.data.results });
+                        console.log(this.state.url)
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+            }
+        });
     }
     render() {
-    var optimized = null;
-    if(this.state.url){
-      optimized = <Text style={{textAlign: 'center', // <-- the magic
-                                    fontWeight: 'bold',
-                                    color: 'blue',
-                                    fontSize: 18,
-                                    marginTop: 8,}} onPress={() => Linking.openURL(this.state.url)}>Generated Optimized Route</Text>;
-    }
+        var optimized = null;
+        if (this.state.url) {
+            optimized = <Text style={{
+                textAlign: 'center', // <-- the magic
+                fontWeight: 'bold',
+                color: 'blue',
+                fontSize: 18,
+                marginTop: 8,
+            }} onPress={() => Linking.openURL(this.state.url)}>Generated Optimized Route</Text>;
+        }
         return (
             <View style={styles.container}>
                 <OriginComponent />
@@ -79,7 +89,7 @@ export default class GetRouteScreen extends React.Component {
                 />
                 <TouchableHighlight
                     style={styles.button}
-                    onPress={()=>this.handleSubmit("101 E San Fernando","SAP Center")}
+                    onPress={() => this.handleSubmit("101 E San Fernando", "SAP Center")}
                     underlayColor="#99d9f4">
                     <Text style={styles.buttonText}>Get Routes</Text>
                 </TouchableHighlight>

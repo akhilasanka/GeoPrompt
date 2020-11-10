@@ -50,7 +50,7 @@ export default class ListTaskScreen extends React.Component {
     ),
   });
   componentDidMount() {
-    var email = 'vibhatest@test.com';
+    var email = null;
     AsyncStorage.getItem('user-email').then((token) => {
       if (token) {
         console.log('email', token);
