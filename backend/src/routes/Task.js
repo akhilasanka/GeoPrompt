@@ -166,6 +166,8 @@ router.post("/task", function (req, res) {
     }
 });
 router.get('/completedTasks', function (req, res) {
+    console.log("Task History Get Request");
+    console.log(req.query);
     Tasks.tasks.find({ "email": req.query.email, "status": "Completed" }, function (err, results) {
         if (err) {
             res.status(500).json({ responseMessage: err.message });

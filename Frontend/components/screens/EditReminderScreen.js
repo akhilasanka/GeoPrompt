@@ -10,8 +10,15 @@ const Form = t.form.Form;
 
 var Category = t.enums(
     {
-        Groceries: 'Grocery',
+        ArtsNCrafts: 'Arts & Crafts Store',
+        ATM: 'ATM',
+        Bookstore: 'Bookstore',
+        CoffeeShop: 'Coffee Shop',
+        Food: 'Food',
+        GroceryStore: 'Grocery Store',
         GasStation: 'Gas Station',
+        HardwareStore: 'Hardware Store',
+        PostOffice: 'Post Office'
     },
     'Category',
 );
@@ -67,7 +74,7 @@ export default class EditTaskScreen extends React.Component {
 
         this.state = {
             initialvalue: {
-                category: 'Groceries',
+                category: 'GroceryStore',
             },
             taskid: null,
         }
@@ -92,10 +99,30 @@ export default class EditTaskScreen extends React.Component {
                 .then(res => {
                     const task = res.data.results[0];
                     console.log(task);
+                    var category = task.categoryName;
+                    if (category == 'Arts & Crafts Store') {
+                        category = 'ArtsNCrafts';
+                    }
+                    else if (category == 'Coffee Shop') {
+                        category = 'CoffeeShop';
+                    }
+                    else if (category == 'Grocery Store') {
+                        category = 'GroceryStore';
+                    }
+                    else if (category == 'Gas Station') {
+                        category = 'GasStation';
+                    }
+                    else if (category == 'Hardware Store') {
+                        category = 'HardwareStore';
+                    }
+                    else if (category == 'Post Office') {
+                        category = 'PostOffice';
+                    }
+                    console.log(category);
                     this.setState({
                         taskid: taskid,
                         initialvalue: {
-                            category: task.categoryName,
+                            category: category,
                             title: task.title,
                             note: task.description,
                             remindBefore: new Date(task.remindbefore),

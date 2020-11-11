@@ -9,8 +9,15 @@ const Form = t.form.Form;
 
 var Category = t.enums(
   {
-    Groceries: 'Grocery',
+    ArtsNCrafts: 'Arts & Crafts Store',
+    ATM: 'ATM',
+    Bookstore: 'Bookstore',
+    CoffeeShop: 'Coffee Shop',
+    Food: 'Food',
+    GroceryStore: 'Grocery Store',
     GasStation: 'Gas Station',
+    HardwareStore: 'Hardware Store',
+    PostOffice: 'Post Office'
   },
   'Category',
 );
@@ -89,6 +96,26 @@ export default class AddReminderScreen extends React.Component {
           if (value.note != null) {
             note = value.note;
           }
+          var category = value.category;
+          if (value.category == 'ArtsNCrafts') {
+            category = 'Arts & Crafts Store';
+          }
+          else if (value.category == 'CoffeeShop') {
+            category = 'Coffee Shop';
+          }
+          else if (value.category == 'GroceryStore') {
+            category = 'Grocery Store';
+          }
+          else if (value.category == 'GasStation') {
+            category = 'Gas Station';
+          }
+          else if (value.category == 'HardwareStore') {
+            category = 'Hardware Store';
+          }
+          else if (value.category == 'PostOffice') {
+            category = 'Post Office';
+          }
+          console.log(category);
           axios({
             method: 'post',
             url: backendBaseURL + '/geoprompt/task',
@@ -96,7 +123,7 @@ export default class AddReminderScreen extends React.Component {
               title: value.title,
               description: note,
               email: user_email,
-              categoryName: value.category,
+              categoryName: category,
               remindbefore: value.remindBefore,
             },
             config: { headers: { 'Content-Type': 'multipart/form-data' } },
@@ -118,7 +145,7 @@ export default class AddReminderScreen extends React.Component {
             })
             .catch((err) => {
               console.log(err);
-            });
+            }); 
         }
       }
     });
