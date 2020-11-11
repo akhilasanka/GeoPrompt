@@ -69,6 +69,10 @@ export default class AddReminderScreen extends React.Component {
     };
   }
 
+  static navigationOptions = ({ navigation }) => ({
+    headerTitle: 'Add Task'
+  });
+
   handleSubmit = async () => {
     console.log('Submit event for add task');
     var user_email = null;

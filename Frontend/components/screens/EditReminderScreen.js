@@ -73,6 +73,10 @@ export default class EditTaskScreen extends React.Component {
         }
     }
 
+    static navigationOptions = ({ navigation }) => ({
+        headerTitle: 'Edit Task'
+    });
+
     componentDidMount() {
 
         console.log(this.props.navigation.getParam("taskid", null));
