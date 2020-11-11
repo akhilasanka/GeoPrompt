@@ -4,6 +4,7 @@ import axios from 'axios';
 var t = require('tcomb-form-native');
 import { backendBaseURL } from '../constants/Constants';
 import AsyncStorage from '@react-native-community/async-storage';
+import { Icon } from 'react-native-elements';
 
 const Form = t.form.Form;
 
@@ -196,12 +197,16 @@ export default class EditTaskScreen extends React.Component {
                     options={options}
                     value={this.state.initialvalue}
                 />
-                <TouchableHighlight style={styles.button} onPress={this.handleSubmit} underlayColor='#99d9f4'>
-                    <Text style={styles.buttonText}>Update Task</Text>
-                </TouchableHighlight>
-                <TouchableHighlight style={styles.deletebutton} onPress={this.handleDelete} underlayColor='#99d9f4'>
-                    <Text style={styles.buttonText}>Delete Task</Text>
-                </TouchableHighlight>
+                <View style={{ flexDirection: 'row', marginTop: 30 }}>
+                    <View style={{ flex: 0.9 }}>
+                        <TouchableHighlight style={styles.button} onPress={this.handleSubmit} underlayColor='#99d9f4'>
+                            <Text style={styles.buttonText}>Update Task</Text>
+                        </TouchableHighlight>
+                    </View>
+                    <View style={{ flex: 0.1 }}>
+                        <Icon name="delete" type="material-icons" style={styles.iconContainer} onPress={this.handleDelete} />
+                    </View>
+                </View>
             </View>
         );
     }
@@ -220,25 +225,19 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
     },
     button: {
-        marginTop: 50,
-        height: 36,
+        marginTop: 0,
+        height: 30,
         backgroundColor: '#48BBEC',
         borderColor: '#48BBEC',
         borderWidth: 1,
-        borderRadius: 8,
+        borderRadius: 10,
         marginBottom: 10,
         alignSelf: 'stretch',
         justifyContent: 'center',
+        marginRight: 10
     },
-    deletebutton: {
-        marginTop: 50,
-        height: 36,
-        backgroundColor: '#cb504d',
-        borderColor: '#cb504d',
-        borderWidth: 1,
-        borderRadius: 8,
-        marginBottom: 10,
-        alignSelf: 'stretch',
-        justifyContent: 'center',
-    },
+    iconContainer: {
+        textAlign: "right",
+        padding: 20
+    }
 });
