@@ -23,7 +23,10 @@ export default class GetRouteScreen extends React.Component {
     this.getDestinationData = this.getDestinationData.bind(this);
     }
     static navigationOptions = ({ navigation }) => ({
-        headerTitle: 'Complete tasks on your way',
+        headerTitle: 'Complete Tasks On The Go!',
+        headerStyle: {
+            backgroundColor: '#44ABEB',
+        },
         headerLeft: Platform.select({
             ios: (
                 <Icon
@@ -177,5 +180,8 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         alignSelf: 'stretch',
         justifyContent: 'center',
-    }
+    },
+    icon: {
+        padding: 10,
+    },
 });
