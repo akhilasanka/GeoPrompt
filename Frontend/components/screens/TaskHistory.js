@@ -4,9 +4,7 @@ import {
   StyleSheet,
   Text,
   ScrollView,
-  Button,
   View,
-  CheckBox
 } from 'react-native';
 import axios from 'axios';
 import { backendBaseURL } from '../constants/Constants';
@@ -17,6 +15,9 @@ import AsyncStorage from '@react-native-community/async-storage';
 export default class TaskHistory extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     headerTitle: 'Task History',
+    headerStyle: {
+      backgroundColor: '#44ABEB',
+    },
     headerLeft: Platform.select({
       ios: (
         <Icon

@@ -7,12 +7,12 @@ import TaskHistory from '../screens/TaskHistory';
 import NotificationLandingMapScreen from '../screens/NotificationLandingMapScreen';
 import EditReminderScreen from '../screens/EditReminderScreen';
 import GetRoutesScreen from '../screens/GetRoutesScreen';
-import { Platform } from 'react-native';
-import { Icon } from 'react-native-elements';
-import { createSwitchNavigator, createAppContainer } from 'react-navigation';
-import { createStackNavigator, TransitionPresets } from 'react-navigation-stack';
-import { createBottomTabNavigator } from 'react-navigation-tabs';
-import { createDrawerNavigator } from 'react-navigation-drawer';
+import {Platform} from 'react-native';
+import {Icon} from 'react-native-elements';
+import {createSwitchNavigator, createAppContainer} from 'react-navigation';
+import {createStackNavigator, TransitionPresets} from 'react-navigation-stack';
+import {createBottomTabNavigator} from 'react-navigation-tabs';
+import {createDrawerNavigator} from 'react-navigation-drawer';
 import BurgerMenu from '../menu/BurgerMenu';
 
 const HomeStack = createStackNavigator(
@@ -35,7 +35,7 @@ const HomeStack = createStackNavigator(
   },
 );
 
-HomeStack.navigationOptions = ({ navigation }) => {
+HomeStack.navigationOptions = ({navigation}) => {
   let tabBarVisible = true;
   if (navigation.state.index > 0) {
     tabBarVisible = false;
@@ -48,13 +48,13 @@ HomeStack.navigationOptions = ({ navigation }) => {
 
   return {
     tabBarLabel: 'Tasks',
-    tabBarIcon: ({ tintColor }) => (
+    tabBarIcon: ({tintColor}) => (
       <Icon name="ios-home" type="ionicon" color={tintColor} />
     ),
     tabBarVisible,
     drawerLockMode,
     drawerLabel: 'Tasks',
-    drawerIcon: ({ tintColor }) => (
+    drawerIcon: ({tintColor}) => (
       <Icon name="md-home" type="ionicon" color={tintColor} />
     ),
   };
@@ -68,9 +68,7 @@ const TaskHistoryStack = createStackNavigator({
 
 TaskHistoryStack.navigationOptions = {
   drawerLabel: 'Task History',
-  drawerIcon: ({ tintColor }) => (
-    <Icon name="history" />
-  ),
+  drawerIcon: ({tintColor}) => <Icon name="history" color={tintColor} />,
 };
 
 const NotificationStack = createStackNavigator({
@@ -81,7 +79,7 @@ const NotificationStack = createStackNavigator({
 
 NotificationStack.navigationOptions = {
   drawerLabel: 'Notification Map',
-  drawerIcon: ({ tintColor }) => (
+  drawerIcon: ({tintColor}) => (
     <Icon name="md-map" type="ionicon" color={tintColor} />
   ),
 };
@@ -93,24 +91,33 @@ const RouteOptimizatorStack = createStackNavigator({
 });
 
 RouteOptimizatorStack.navigationOptions = {
-  drawerLabel: 'Complete tasks on your way',
-  drawerIcon: ({ tintColor }) => (
+  drawerLabel: 'Complete Tasks On The Go!',
+  drawerIcon: ({tintColor}) => (
     <Icon name="md-paper-plane" type="ionicon" color={tintColor} />
   ),
 };
 
-
-
 const MainNavigator = Platform.select({
   android: createDrawerNavigator(
-    { HomeStack, TaskHistoryStack, NotificationStack, RouteOptimizatorStack },
-    { contentComponent: BurgerMenu }
+    {HomeStack, TaskHistoryStack, NotificationStack, RouteOptimizatorStack},
+    {
+      contentComponent: BurgerMenu,
+      drawerBackgroundColor: '#000000',
+      contentOptions: {
+        inactiveTintColor: '#FFFFFF',
+        activeTintColor: '#44ABEB',
+        labelStyle: {
+          fontSize: 16,
+          fontWeight: 'bold',
+        },
+      },
+    },
   ),
 });
 
-const LoginStack = createStackNavigator({ LoginScreen });
+const LoginStack = createStackNavigator({LoginScreen});
 
-LoginStack.navigationOptions = ({ navigation }) => {
+LoginStack.navigationOptions = ({navigation}) => {
   let tabBarVisible = true;
   if (navigation.state.index > 0) {
     tabBarVisible = false;
@@ -118,15 +125,27 @@ LoginStack.navigationOptions = ({ navigation }) => {
 
   return {
     tabBarLabel: 'Login',
-    tabBarIcon: ({ tintColor }) => {
-      let iconName = Platform.select({ android: 'md-log-in' });
-      return <Icon name={iconName} type="ionicon" color={tintColor} />;
+    tabBarIcon: ({tintColor}) => {
+      let iconName = Platform.select({android: 'md-log-in'});
+      return <Icon name={iconName} type="ionicon" color={'#000000'} />;
     },
-    tabBarVisible,
+    swipeEnabled: true,
+    tabBarOptions: {
+      style: {
+        backgroundColor: '#44ABEB',
+      },
+      labelStyle: {
+        activeTintColor: '#FFFFFF',
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: '#000000',
+      },
+      tabBarVisible,
+    },
   };
 };
 
-const AuthTabs = createBottomTabNavigator({ LoginStack, RegisterScreen });
+const AuthTabs = createBottomTabNavigator({LoginStack, RegisterScreen});
 
 const RootSwitch = createSwitchNavigator({
   AuthTabs: {

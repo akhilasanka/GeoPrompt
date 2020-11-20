@@ -31,7 +31,10 @@ export default class ListTaskScreen extends React.Component {
     navigate('NotificationLandingMapScreen');
   }
   static navigationOptions = ({ navigation }) => ({
-    headerTitle: 'Home',
+    headerTitle: 'Tasks',
+    headerStyle: {
+      backgroundColor: '#44ABEB',
+    },
     headerLeft: () => (
       <Icon
         name="md-menu"

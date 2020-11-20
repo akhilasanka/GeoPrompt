@@ -5,6 +5,8 @@ import {
   StyleSheet,
   TouchableHighlight,
   ActivityIndicator,
+  Image,
+  Dimensions,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import t from 'tcomb-form-native';
@@ -138,6 +140,10 @@ export default class LoginScreen extends Component {
     }
     return (
       <View style={styles.container}>
+        <Image
+          style={styles.logo}
+          source={require('../images/geoprompt-logo.png')}
+        />
         <Form ref={(c) => (this._form = c)} type={User} options={options} />
         <TouchableHighlight
           style={styles.button}
@@ -178,7 +184,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    marginTop: 50,
     padding: 20,
     backgroundColor: '#ffffff',
   },
@@ -190,8 +195,8 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 50,
     height: 36,
-    backgroundColor: '#48BBEC',
-    borderColor: '#48BBEC',
+    backgroundColor: '#44ABEB',
+    borderColor: '#44ABEB',
     borderWidth: 1,
     borderRadius: 8,
     marginBottom: 10,
@@ -203,5 +208,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginBottom: 7,
     fontWeight: '600',
+  },
+  logo: {
+    height: Dimensions.get('window').width * 0.56,
+    width: Dimensions.get('window').width * 0.90,
+    resizeMode: 'contain',
   },
 });

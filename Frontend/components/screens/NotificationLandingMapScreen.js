@@ -10,6 +10,9 @@ import BackgroundGeolocation from '@mauron85/react-native-background-geolocation
 export default class NotificationLandingMapScreen extends React.Component {
   static navigationOptions = ({navigation}) => ({
     headerTitle: 'Task locations nearby',
+    headerStyle: {
+      backgroundColor: '#44ABEB',
+    },
     headerLeft: Platform.select({
       ios: (
         <Icon
