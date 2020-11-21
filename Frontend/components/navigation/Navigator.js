@@ -6,6 +6,7 @@ import ListTaskScreen from '../screens/ListTaskScreen';
 import TaskHistory from '../screens/TaskHistory';
 import NotificationLandingMapScreen from '../screens/NotificationLandingMapScreen';
 import EditReminderScreen from '../screens/EditReminderScreen';
+import GetRoutesScreen from '../screens/GetRoutesScreen';
 import {Platform} from 'react-native';
 import {Icon} from 'react-native-elements';
 import {createSwitchNavigator, createAppContainer} from 'react-navigation';
@@ -67,9 +68,7 @@ const TaskHistoryStack = createStackNavigator({
 
 TaskHistoryStack.navigationOptions = {
   drawerLabel: 'Task History',
-  drawerIcon: ({tintColor}) => (
-    <Icon name="history" />
-  ),
+  drawerIcon: ({tintColor}) => <Icon name="history" color={tintColor} />,
 };
 
 const NotificationStack = createStackNavigator({
@@ -85,11 +84,34 @@ NotificationStack.navigationOptions = {
   ),
 };
 
+const RouteOptimizatorStack = createStackNavigator({
+  GetRoutesScreen: {
+    screen: GetRoutesScreen,
+  },
+});
+
+RouteOptimizatorStack.navigationOptions = {
+  drawerLabel: 'Complete Tasks On The Go!',
+  drawerIcon: ({tintColor}) => (
+    <Icon name="md-paper-plane" type="ionicon" color={tintColor} />
+  ),
+};
 
 const MainNavigator = Platform.select({
   android: createDrawerNavigator(
-    {HomeStack, TaskHistoryStack, NotificationStack},
-    {contentComponent: BurgerMenu}
+    {HomeStack, TaskHistoryStack, NotificationStack, RouteOptimizatorStack},
+    {
+      contentComponent: BurgerMenu,
+      drawerBackgroundColor: '#000000',
+      contentOptions: {
+        inactiveTintColor: '#FFFFFF',
+        activeTintColor: '#44ABEB',
+        labelStyle: {
+          fontSize: 16,
+          fontWeight: 'bold',
+        },
+      },
+    },
   ),
 });
 
@@ -105,9 +127,21 @@ LoginStack.navigationOptions = ({navigation}) => {
     tabBarLabel: 'Login',
     tabBarIcon: ({tintColor}) => {
       let iconName = Platform.select({android: 'md-log-in'});
-      return <Icon name={iconName} type="ionicon" color={tintColor} />;
+      return <Icon name={iconName} type="ionicon" color={'#000000'} />;
     },
-    tabBarVisible,
+    swipeEnabled: true,
+    tabBarOptions: {
+      style: {
+        backgroundColor: '#44ABEB',
+      },
+      labelStyle: {
+        activeTintColor: '#FFFFFF',
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: '#000000',
+      },
+      tabBarVisible,
+    },
   };
 };
 

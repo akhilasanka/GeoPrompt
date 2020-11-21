@@ -1,17 +1,11 @@
 import React, {Component} from 'react';
 import Orientation from 'react-native-orientation';
 import Navigator from './navigation/Navigator';
-import NotificationHandler from "./notification/NotificationHandler";
+import {StatusBar, View} from 'react-native';
 
 export default class App extends Component {
-
   constructor(props) {
-    super(props)
-    this.handler = new NotificationHandler(this.onUserClick.bind(this));
-  }
-  onUserClick(notification) {
-      //place holder function for custom behavior when user clicks on the notification.
-      console.log("IN APP.js: => ", notification);
+    super(props);
   }
 
   componentDidMount = () => {
@@ -19,6 +13,11 @@ export default class App extends Component {
   };
 
   render() {
-    return <Navigator />;
+    return (
+      <View style={{flex: 1}}>
+        <StatusBar backgroundColor="#44ABEB" barStyle="default" />
+        <Navigator />
+      </View>
+    );
   }
 }

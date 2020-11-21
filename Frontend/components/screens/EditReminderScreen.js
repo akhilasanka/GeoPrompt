@@ -3,13 +3,22 @@ import { Platform, StyleSheet, Text, View, TouchableHighlight, Button, Alert } f
 import axios from 'axios';
 var t = require('tcomb-form-native');
 import { backendBaseURL } from '../constants/Constants';
+import AsyncStorage from '@react-native-community/async-storage';
+import { Icon } from 'react-native-elements';
 
 const Form = t.form.Form;
 
 var Category = t.enums(
     {
-        Groceries: 'Grocery',
+        ArtsNCrafts: 'Arts & Crafts Store',
+        ATM: 'ATM',
+        Bookstore: 'Bookstore',
+        CoffeeShop: 'Coffee Shop',
+        Food: 'Food',
+        GroceryStore: 'Grocery Store',
         GasStation: 'Gas Station',
+        HardwareStore: 'Hardware Store',
+        PostOffice: 'Post Office'
     },
     'Category',
 );
@@ -65,11 +74,15 @@ export default class EditTaskScreen extends React.Component {
 
         this.state = {
             initialvalue: {
-                category: 'Groceries',
+                category: 'GroceryStore',
             },
             taskid: null,
         }
     }
+
+    static navigationOptions = ({ navigation }) => ({
+        headerTitle: 'Edit Task'
+    });
 
     componentDidMount() {
 
@@ -86,10 +99,30 @@ export default class EditTaskScreen extends React.Component {
                 .then(res => {
                     const task = res.data.results[0];
                     console.log(task);
+                    var category = task.categoryName;
+                    if (category == 'Arts & Crafts Store') {
+                        category = 'ArtsNCrafts';
+                    }
+                    else if (category == 'Coffee Shop') {
+                        category = 'CoffeeShop';
+                    }
+                    else if (category == 'Grocery Store') {
+                        category = 'GroceryStore';
+                    }
+                    else if (category == 'Gas Station') {
+                        category = 'GasStation';
+                    }
+                    else if (category == 'Hardware Store') {
+                        category = 'HardwareStore';
+                    }
+                    else if (category == 'Post Office') {
+                        category = 'PostOffice';
+                    }
+                    console.log(category);
                     this.setState({
                         taskid: taskid,
                         initialvalue: {
-                            category: task.categoryName,
+                            category: category,
                             title: task.title,
                             note: task.description,
                             remindBefore: new Date(task.remindbefore),
@@ -105,47 +138,84 @@ export default class EditTaskScreen extends React.Component {
 
     handleSubmit = async () => {
         console.log('Submit event for update task');
-        var value = this._form.getValue();
-        console.log(value.remindBefore);
-        if (value) {
-            // if validation fails, value will be null
-            console.log(value); // value here is an instance of Person
-            var note = '';
-            if (value.note != null) {
-                note = value.note;
-            }
-            await axios({
-                method: 'put',
-                url: backendBaseURL + '/geoprompt/task',
-                data: {
-                    taskid: this.state.taskid,
-                    title: value.title,
-                    description: note,
-                    email: 'a',
-                    categoryName: value.category,
-                    remindbefore: value.remindBefore,
-                },
-                config: { headers: { 'Content-Type': 'multipart/form-data' } },
-            })
-                .then((res) => {
-                    console.log(res);
-                    if (res.status == 200) {
-                        Alert.alert('Success!!!', 'Updated Task Successfully', [
-                            {
-                                text: 'OK',
-                                onPress: () => this.props.navigation.push('ListTaskScreen'),
-                            },
-                        ]);
-                    } else {
-                        Alert.alert('Oops!!!', "Couldn't add task. Please try again.", [
-                            { text: 'OK', onPress: () => console.log(res.responseMessage) },
-                        ]);
+        var user_email = null;
+        AsyncStorage.getItem('user-email').then((token) => {
+            if (token) {
+                console.log('email', token);
+                user_email = token;
+                var value = this._form.getValue();
+                console.log(value.remindBefore);
+                if (value) {
+                    // if validation fails, value will be null
+                    console.log(value); // value here is an instance of Person
+                    var note = '';
+                    if (value.note != null) {
+                        note = value.note;
                     }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        }
+                    axios({
+                        method: 'put',
+                        url: backendBaseURL + '/geoprompt/task',
+                        data: {
+                            taskid: this.state.taskid,
+                            title: value.title,
+                            description: note,
+                            email: user_email,
+                            categoryName: value.category,
+                            remindbefore: value.remindBefore,
+                        },
+                        config: { headers: { 'Content-Type': 'multipart/form-data' } },
+                    })
+                        .then((res) => {
+                            console.log(res);
+                            if (res.status == 200) {
+                                Alert.alert('Success!!!', 'Updated Task Successfully', [
+                                    {
+                                        text: 'OK',
+                                        onPress: () => this.props.navigation.push('ListTaskScreen'),
+                                    },
+                                ]);
+                            } else {
+                                Alert.alert('Oops!!!', "Couldn't add task. Please try again.", [
+                                    { text: 'OK', onPress: () => console.log(res.responseMessage) },
+                                ]);
+                            }
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        });
+                }
+            }
+        });
+    };
+
+    handleDelete = async () => {
+        console.log('Submit event for delete task');
+        await axios({
+            method: 'post',
+            url: backendBaseURL + '/geoprompt/task/delete',
+            data: {
+                taskid: this.state.taskid
+            },
+            config: { headers: { 'Content-Type': 'multipart/form-data' } },
+        })
+            .then((res) => {
+                console.log(res);
+                if (res.status == 200) {
+                    Alert.alert('Success!!!', 'Successfully deleted!', [
+                        {
+                            text: 'OK',
+                            onPress: () => this.props.navigation.push('ListTaskScreen'),
+                        },
+                    ]);
+                } else {
+                    Alert.alert('Oops!!!', "Couldn't delete task. Please try again.", [
+                        { text: 'OK', onPress: () => console.log(res.responseMessage) },
+                    ]);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     };
 
     render() {
@@ -158,9 +228,16 @@ export default class EditTaskScreen extends React.Component {
                     options={options}
                     value={this.state.initialvalue}
                 />
-                <TouchableHighlight style={styles.button} onPress={this.handleSubmit} underlayColor='#99d9f4'>
-                    <Text style={styles.buttonText}>Update Task</Text>
-                </TouchableHighlight>
+                <View style={{ flexDirection: 'row', marginTop: 30 }}>
+                    <View style={{ flex: 0.9 }}>
+                        <TouchableHighlight style={styles.button} onPress={this.handleSubmit} underlayColor='#99d9f4'>
+                            <Text style={styles.buttonText}>Update Task</Text>
+                        </TouchableHighlight>
+                    </View>
+                    <View style={{ flex: 0.1 }}>
+                        <Icon name="delete" type="material-icons" style={styles.iconContainer} onPress={this.handleDelete} />
+                    </View>
+                </View>
             </View>
         );
     }
@@ -179,14 +256,19 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
     },
     button: {
-        marginTop: 50,
-        height: 36,
+        marginTop: 0,
+        height: 30,
         backgroundColor: '#48BBEC',
         borderColor: '#48BBEC',
         borderWidth: 1,
-        borderRadius: 8,
+        borderRadius: 10,
         marginBottom: 10,
         alignSelf: 'stretch',
         justifyContent: 'center',
+        marginRight: 10
     },
+    iconContainer: {
+        textAlign: "right",
+        padding: 20
+    }
 });

@@ -1,15 +1,23 @@
 import React from 'react';
-import {StyleSheet, Text, View, TouchableHighlight, Alert} from 'react-native';
+import { StyleSheet, Text, View, TouchableHighlight, Alert } from 'react-native';
 var t = require('tcomb-form-native');
 import axios from 'axios';
-import {backendBaseURL} from '../constants/Constants';
+import { backendBaseURL } from '../constants/Constants';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const Form = t.form.Form;
 
 var Category = t.enums(
   {
-    Groceries: 'Grocery',
+    ArtsNCrafts: 'Arts & Crafts Store',
+    ATM: 'ATM',
+    Bookstore: 'Bookstore',
+    CoffeeShop: 'Coffee Shop',
+    Food: 'Food',
+    GroceryStore: 'Grocery Store',
     GasStation: 'Gas Station',
+    HardwareStore: 'Hardware Store',
+    PostOffice: 'Post Office'
   },
   'Category',
 );
@@ -68,47 +76,80 @@ export default class AddReminderScreen extends React.Component {
     };
   }
 
+  static navigationOptions = ({ navigation }) => ({
+    headerTitle: 'Add Task'
+  });
+
   handleSubmit = async () => {
     console.log('Submit event for add task');
-    var value = this._form.getValue();
-    if (value) {
-      // if validation fails, value will be null
-      console.log(value); // value here is an instance of Person
-      var note = '';
-      if (value.note != null) {
-        note = value.note;
-      }
-      await axios({
-        method: 'post',
-        url: backendBaseURL + '/geoprompt/task',
-        data: {
-          title: value.title,
-          description: note,
-          email: 'a',
-          categoryName: value.category,
-          remindbefore: value.remindBefore,
-        },
-        config: {headers: {'Content-Type': 'multipart/form-data'}},
-      })
-        .then((res) => {
-          console.log(res);
-          if (res.status == 200) {
-            Alert.alert('Success!!!', 'Added Task Successfully', [
-              {
-                text: 'OK',
-                onPress: () => this.props.navigation.push('ListTaskScreen'),
-              },
-            ]);
-          } else {
-            Alert.alert('Oops!!!', "Couldn't add task. Please try again.", [
-              {text: 'OK', onPress: () => console.log(res.responseMessage)},
-            ]);
+    var user_email = null;
+    AsyncStorage.getItem('user-email').then((token) => {
+      if (token) {
+        console.log('email', token);
+        user_email = token;
+        var value = this._form.getValue();
+        if (value) {
+          // if validation fails, value will be null
+          console.log(value); // value here is an instance of Person
+          console.log(user_email);
+          var note = '';
+          if (value.note != null) {
+            note = value.note;
           }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+          var category = value.category;
+          if (value.category == 'ArtsNCrafts') {
+            category = 'Arts & Crafts Store';
+          }
+          else if (value.category == 'CoffeeShop') {
+            category = 'Coffee Shop';
+          }
+          else if (value.category == 'GroceryStore') {
+            category = 'Grocery Store';
+          }
+          else if (value.category == 'GasStation') {
+            category = 'Gas Station';
+          }
+          else if (value.category == 'HardwareStore') {
+            category = 'Hardware Store';
+          }
+          else if (value.category == 'PostOffice') {
+            category = 'Post Office';
+          }
+          console.log(category);
+          axios({
+            method: 'post',
+            url: backendBaseURL + '/geoprompt/task',
+            data: {
+              title: value.title,
+              description: note,
+              email: user_email,
+              categoryName: category,
+              remindbefore: value.remindBefore,
+            },
+            config: { headers: { 'Content-Type': 'multipart/form-data' } },
+          })
+            .then((res) => {
+              console.log(res);
+              if (res.status == 200) {
+                Alert.alert('Success!!!', 'Added Task Successfully', [
+                  {
+                    text: 'OK',
+                    onPress: () => this.props.navigation.push('ListTaskScreen'),
+                  },
+                ]);
+              } else {
+                Alert.alert('Oops!!!', "Couldn't add task. Please try again.", [
+                  { text: 'OK', onPress: () => console.log(res.responseMessage) },
+                ]);
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            }); 
+        }
+      }
+    });
+
   };
 
   render() {

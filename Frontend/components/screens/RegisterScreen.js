@@ -6,6 +6,8 @@ import {
   Alert,
   TouchableHighlight,
   Text,
+  Image,
+  Dimensions,
 } from 'react-native';
 import {Icon} from 'react-native-elements';
 import t from 'tcomb-form-native';
@@ -68,10 +70,21 @@ export default class RegisterScreen extends Component {
   }
 
   static navigationOptions = {
-    tabBarLabel: 'Signup',
+    tabBarLabel: 'Register',
     tabBarIcon: ({tintColor}) => {
       let iconName = Platform.select({android: 'md-person-add'});
-      return <Icon name={iconName} type="ionicon" color={tintColor} />;
+      return <Icon name={iconName} type="ionicon" color={'#000000'} />;
+    },
+    tabBarOptions: {
+      style: {
+        backgroundColor: '#44ABEB',
+      },
+      activeTintColor: '#FFFFFF',
+      labelStyle: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: '#000000',
+      },
     },
   };
 
@@ -139,6 +152,10 @@ export default class RegisterScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <Image
+          style={styles.logo}
+          source={require('../images/geoprompt-logo.png')}
+        />
         <Form
           type={User}
           options={options}
@@ -185,7 +202,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    marginTop: 50,
     padding: 20,
     backgroundColor: '#ffffff',
   },
@@ -197,8 +213,8 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 50,
     height: 36,
-    backgroundColor: '#48BBEC',
-    borderColor: '#48BBEC',
+    backgroundColor: '#44ABEB',
+    borderColor: '#44ABEB',
     borderWidth: 1,
     borderRadius: 8,
     marginBottom: 10,
@@ -210,5 +226,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginBottom: 7,
     fontWeight: '600',
+  },
+  logo: {
+    height: Dimensions.get('window').width * 0.56,
+    width: Dimensions.get('window').width * 0.9,
+    resizeMode: 'contain',
   },
 });
