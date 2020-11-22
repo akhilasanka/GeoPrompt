@@ -81,7 +81,11 @@ export default class EditTaskScreen extends React.Component {
     }
 
     static navigationOptions = ({ navigation }) => ({
-        headerTitle: 'Edit Task'
+        headerTitle: 'Edit Task',
+        headerTintColor: 'black',
+        headerStyle: {
+            backgroundColor: '#44ABEB',
+        },
     });
 
     componentDidMount() {
