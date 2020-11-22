@@ -10,8 +10,6 @@ import axios from 'axios';
 import { backendBaseURL } from '../constants/Constants';
 import { Icon } from 'react-native-elements';
 import AsyncStorage from '@react-native-community/async-storage';
-import { LogBox } from 'react-native';
-LogBox.ignoreLogs(['Warning: ...']);
 
 export default class TaskHistory extends React.Component {
   static navigationOptions = ({ navigation }) => ({

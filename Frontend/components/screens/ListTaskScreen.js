@@ -14,8 +14,7 @@ import { Icon } from 'react-native-elements';
 import BackgroundGeolocationWrapper from './BackgroundGeolocationWrapper';
 import NotificationHandler from "../notification/NotificationHandler";
 import AsyncStorage from '@react-native-community/async-storage';
-import { LogBox } from 'react-native';
-LogBox.ignoreLogs(['Warning: ...']);
+
 
 export default class ListTaskScreen extends React.Component {
   constructor(props) {
@@ -54,7 +53,7 @@ export default class ListTaskScreen extends React.Component {
       />
     ),
   });
-  componentWillMount() {
+  componentDidMount() {
     var email = null;
     AsyncStorage.getItem('user-email').then((token) => {
       if (token) {
