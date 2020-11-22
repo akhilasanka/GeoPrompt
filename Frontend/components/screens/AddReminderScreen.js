@@ -77,7 +77,11 @@ export default class AddReminderScreen extends React.Component {
   }
 
   static navigationOptions = ({ navigation }) => ({
-    headerTitle: 'Add Task'
+    headerTitle: 'Add Task',
+    headerTintColor: 'black',
+    headerStyle: {
+      backgroundColor: '#44ABEB',
+    },
   });
 
   handleSubmit = async () => {
@@ -134,7 +138,10 @@ export default class AddReminderScreen extends React.Component {
                 Alert.alert('Success!!!', 'Added Task Successfully', [
                   {
                     text: 'OK',
-                    onPress: () => this.props.navigation.push('ListTaskScreen'),
+                    onPress: () => {
+                      this.props.navigation.push('ListTaskScreen');
+                      this.setState({ initialvalue: null });
+                    },
                   },
                 ]);
               } else {
@@ -145,7 +152,7 @@ export default class AddReminderScreen extends React.Component {
             })
             .catch((err) => {
               console.log(err);
-            }); 
+            });
         }
       }
     });
