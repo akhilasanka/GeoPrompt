@@ -15,6 +15,7 @@ import BackgroundGeolocationWrapper from './BackgroundGeolocationWrapper';
 import NotificationHandler from "../notification/NotificationHandler";
 import AsyncStorage from '@react-native-community/async-storage';
 
+
 export default class ListTaskScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -104,7 +105,6 @@ export default class ListTaskScreen extends React.Component {
                 key={index}
                 style={{
                   flex: 2,
-                  backgroundColor: this.state.colors[index % 3],
                 }}>
                   <View style={{flexDirection: 'row'}}>
                     <View style={{flex: 0.9}}>
@@ -126,6 +126,12 @@ export default class ListTaskScreen extends React.Component {
                   />
                   <Text>Mark as complete!</Text>
                 </View>
+              <View
+                style={{
+                  borderBottomColor: 'black',
+                  borderBottomWidth: 2,
+                }}
+              />
               </TouchableOpacity>
             ))}
           </ScrollView>
