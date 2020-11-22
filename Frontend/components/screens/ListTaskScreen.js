@@ -14,6 +14,8 @@ import { Icon } from 'react-native-elements';
 import BackgroundGeolocationWrapper from './BackgroundGeolocationWrapper';
 import NotificationHandler from "../notification/NotificationHandler";
 import AsyncStorage from '@react-native-community/async-storage';
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(['Warning: ...']);
 
 export default class ListTaskScreen extends React.Component {
   constructor(props) {
@@ -52,7 +54,7 @@ export default class ListTaskScreen extends React.Component {
       />
     ),
   });
-  componentDidMount() {
+  componentWillMount() {
     var email = null;
     AsyncStorage.getItem('user-email').then((token) => {
       if (token) {
@@ -104,7 +106,6 @@ export default class ListTaskScreen extends React.Component {
                 key={index}
                 style={{
                   flex: 2,
-                  backgroundColor: this.state.colors[index % 3],
                 }}>
                   <View style={{flexDirection: 'row'}}>
                     <View style={{flex: 0.9}}>
@@ -126,6 +127,12 @@ export default class ListTaskScreen extends React.Component {
                   />
                   <Text>Mark as complete!</Text>
                 </View>
+              <View
+                style={{
+                  borderBottomColor: 'black',
+                  borderBottomWidth: 2,
+                }}
+              />
               </TouchableOpacity>
             ))}
           </ScrollView>

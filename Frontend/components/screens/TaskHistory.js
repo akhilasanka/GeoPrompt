@@ -10,7 +10,8 @@ import axios from 'axios';
 import { backendBaseURL } from '../constants/Constants';
 import { Icon } from 'react-native-elements';
 import AsyncStorage from '@react-native-community/async-storage';
-
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(['Warning: ...']);
 
 export default class TaskHistory extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -72,13 +73,19 @@ export default class TaskHistory extends React.Component {
           {this.state.tasks.map((item, index) => (
             <TouchableOpacity
               key={index}
-              style={{ flex: 2, backgroundColor: this.state.colors[index % 3] }}>
+              style={{ flex: 2, }}>
               <Text style={styles.title}>{item.title}</Text>
               { item.description ?
                 <Text style={styles.description}>{item.description}</Text> :
                 null
               }
               <Text style={styles.text}>Category: {item.categoryName}</Text>
+              <View
+                style={{
+                  borderBottomColor: 'black',
+                  borderBottomWidth: 2,
+                }}
+              />
             </TouchableOpacity>
           ))}
         </ScrollView>
