@@ -96,7 +96,7 @@ export default class EditTaskScreen extends React.Component {
         if (taskid != null) {
             axios({
                 method: 'get',
-                url: 'http://10.0.0.66:3001/geoprompt/task',
+                url: backendBaseURL + '/geoprompt/task',
                 params: { "taskid": taskid },
                 config: { headers: { 'Content-Type': 'application/json' } }
             })
