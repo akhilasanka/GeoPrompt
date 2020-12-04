@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
-const GOOGLE_PLACES_API_KEY = 'AIzaSyDoCZjlJjKSxIbwuMLUv4Xg_dySO3Rfynw';
+const GOOGLE_PLACES_API_KEY = '';
 
 export default class OriginComponent extends React.Component {
       constructor(props) {
@@ -34,7 +34,7 @@ export default class OriginComponent extends React.Component {
                         this.demoMethod()
                     }}
                     query={{
-                        key: 'AIzaSyDoCZjlJjKSxIbwuMLUv4Xg_dySO3Rfynw',
+                        key: '',
                         language: 'en'
                     }}
                     nearbyPlacesAPI='GooglePlacesSearch'
