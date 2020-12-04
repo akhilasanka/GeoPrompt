@@ -3,10 +3,10 @@ var router = express.Router();
 var Tasks = require('../model/TaskSchema');
 var ObjectId = require('mongodb').ObjectID;
 const googleMapsClient = require('@google/maps').createClient({
-    key: 'AIzaSyDoCZjlJjKSxIbwuMLUv4Xg_dySO3Rfynw'
+    key: ''
 });
 var distance = require('google-distance-matrix');
-distance.key('AIzaSyDoCZjlJjKSxIbwuMLUv4Xg_dySO3Rfynw');
+distance.key('');
 distance.mode('driving');
 const { response } = require('express');
 
