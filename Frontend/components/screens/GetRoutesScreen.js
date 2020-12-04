@@ -8,7 +8,7 @@ import DestinationComponent from './DestinationComponent';
 import { Icon } from 'react-native-elements';
 import AsyncStorage from '@react-native-community/async-storage';
 
-const GOOGLE_PLACES_API_KEY = 'AIzaSyDoCZjlJjKSxIbwuMLUv4Xg_dySO3Rfynw';
+const GOOGLE_PLACES_API_KEY = '';
 
 export default class GetRouteScreen extends React.Component {
   constructor(props) {
